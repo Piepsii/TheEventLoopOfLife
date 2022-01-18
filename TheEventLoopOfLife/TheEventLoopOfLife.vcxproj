@@ -144,14 +144,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Crow.cpp" />
+    <ClCompile Include="src\Sheep.cpp" />
+    <ClCompile Include="src\Grass.cpp" />
+    <ClCompile Include="src\Agent.cpp" />
+    <ClCompile Include="src\Simulation.cpp" />
     <ClCompile Include="src\main.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)\include</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)\include</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)\include</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)\include</AdditionalIncludeDirectories>
     </ClCompile>
+    <ClCompile Include="src\Wolf.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Crow.h" />
+    <ClInclude Include="src\Sheep.h" />
+    <ClInclude Include="src\Grass.h" />
+    <ClInclude Include="src\Agent.h" />
+    <ClInclude Include="src\Simulation.h" />
     <ClInclude Include="include\SFML\Audio.hpp" />
     <ClInclude Include="include\SFML\Audio\AlResource.hpp" />
     <ClInclude Include="include\SFML\Audio\Export.hpp" />
@@ -250,6 +261,7 @@
     <ClInclude Include="include\SFML\Window\Window.hpp" />
     <ClInclude Include="include\SFML\Window\WindowHandle.hpp" />
     <ClInclude Include="include\SFML\Window\WindowStyle.hpp" />
+    <ClInclude Include="src\Wolf.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="include\SFML\Audio\SoundFileFactory.inl" />
