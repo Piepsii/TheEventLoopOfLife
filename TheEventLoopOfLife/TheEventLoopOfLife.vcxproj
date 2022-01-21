@@ -144,7 +144,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Crow.cpp" />
+    <ClCompile Include="src\Crow.cpp" />
     <ClCompile Include="src\Sheep.cpp" />
     <ClCompile Include="src\Grass.cpp" />
     <ClCompile Include="src\Agent.cpp" />
@@ -158,7 +158,7 @@
     <ClCompile Include="src\Wolf.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Crow.h" />
+    <ClInclude Include="src\Crow.h" />
     <ClInclude Include="src\Sheep.h" />
     <ClInclude Include="src\Grass.h" />
     <ClInclude Include="src\Agent.h" />
