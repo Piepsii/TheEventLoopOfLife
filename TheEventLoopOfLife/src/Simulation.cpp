@@ -25,6 +25,9 @@ Simulation::~Simulation()
 
 bool Simulation::Update(float deltaTime)
 {
+	for (int i = 0; i < gridSize * gridSize; i++) {
+		grassArray[i].Update();
+	}
 	return true;
 }
 
