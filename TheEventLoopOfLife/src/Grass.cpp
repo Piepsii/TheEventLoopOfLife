@@ -10,26 +10,30 @@ Grass::Grass()
 void Grass::Create()
 {
 	rect = sf::RectangleShape(sf::Vector2f(size, size));
-	rect.setPosition((size + 1) * (index % 10), (size + 1) * (index / 10));
-	rect.setFillColor(seed);
-
+	rect.setPosition((size + 1) * posX, (size + 1) * posY);
+	rect.setFillColor(dirt);
 }
 
 void Grass::Update()
 {
-	if (health >= 1.0f)
-		canGrow = false;
-	else if(health <= 0.0f)
-		canGrow = true;
+	switch (state) {
+		case GrassState::Seed:
+			health < 1.1f ? health += growthFactor : health = health;
+			rect.setFillColor(LerpRGB(seed, mature, health));
 
-	if (canGrow){
-		health += growthFactor;
-		rect.setFillColor(LerpRGB(seed, mature, health));
-	}
-	else
-	{
-		health -= witherFactor;
-		rect.setFillColor(LerpRGB(mature, dirt, (1.0f - health)));
+
+			if (health >= 1.0f)
+				state = GrassState::Mature;
+			break;
+		case GrassState::Mature:
+			health > 0.0f ? health -= witherFactor : health = health;
+			rect.setFillColor(LerpRGB(mature, dirt, (1.0f - health)));
+
+			if (health <= 0.0f)
+				state = GrassState::Dirt;
+			break;
+		case GrassState::Dirt:
+			break;
 	}
 }
 
@@ -43,7 +47,29 @@ void Grass::setSize(float _size)
 	size = _size;
 }
 
-void Grass::setIndex(int _index)
+void Grass::setPos(int _posX, int _posY)
 {
-	index = _index;
+	posX = _posX;
+	posY = _posY;
+}
+
+void Grass::setState(GrassState _state)
+{
+	state = _state;
+}
+
+int Grass::getRandomNeighborAsIndex()
+{
+	int neighborX = -1, neighborY = -1;
+	while (neighborX < 0 || neighborX > 9) {
+		int offsetX = rand() % 3 - 1;
+		neighborX = posX + offsetX;
+	}
+	while (neighborY < 0 || neighborY > 9) {
+		int offsetY = rand() % 3 - 1;
+		neighborY = posY + offsetY;
+	}
+
+	int index = neighborX * 10 + neighborY;
+	return index;
 }

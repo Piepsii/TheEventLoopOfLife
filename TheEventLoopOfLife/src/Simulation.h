@@ -4,6 +4,7 @@
 
 #include <SFML/Graphics.hpp>
 #include "Grass.h"
+#include <random>
 
 class Simulation
 {
@@ -15,9 +16,9 @@ public:
 	void Draw(sf::RenderWindow& _window);
 
 private:
+	Grass* grassArray;
 	unsigned int screenWidth, screenHeight;
 	unsigned int gridSize;
-	Grass* grassArray;
-
+	unsigned int grassSpawnChance = 30;
 };
 
