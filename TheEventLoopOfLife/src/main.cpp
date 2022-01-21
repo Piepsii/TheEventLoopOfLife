@@ -7,7 +7,9 @@ int main() {
     sf::VideoMode videoMode;
     const char* title = "The Event Loop of Life";
 
-    sf::RenderWindow window(sf::VideoMode(1080, 720), title);
+    Simulation* sim = new Simulation(640, 640, 10);
+    sf::RenderWindow window(sf::VideoMode(640, 640), title);
+
     sf::Clock clock;
     sf::Time delta;
     float frameTime = 1.0f / 60.0f;
@@ -23,11 +25,23 @@ int main() {
                 window.close();
         }
 
-        window.clear();
+        window.clear(sf::Color::Black);
+        window.setActive();
+
+        if (sim->Update(delta.asSeconds())) {
+            sim->Draw(window);
+        }
+        else {
+            running = false;
+        }
+
         window.display();
         sf::Time delay(sf::seconds(frameTime - delta.asSeconds()));
         sf::sleep(delay);
     }
+
+    delete sim;
+    sim = nullptr;
 
     return 0;
 }
