@@ -1,6 +1,7 @@
 //main.cpp
 
-#include <SFML/Graphics.hpp>
+#include <SFML\Graphics.hpp>
+#include "Simulation.h"
 
 int main() {
     sf::VideoMode videoMode;

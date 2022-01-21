@@ -116,7 +116,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>SFML_STATIC;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)TheEventLoopOfLife\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\include</AdditionalIncludeDirectories>
+      <ShowIncludes>false</ShowIncludes>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -124,6 +125,10 @@
       <AdditionalDependencies>sfml-graphics-s-d.lib;sfml-system-s-d.lib;sfml-window-s-d.lib;opengl32.lib;freetype.lib;winmm.lib;gdi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)TheEventLoopOfLife\lib</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -142,6 +147,10 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>sfml-graphics.lib;sfml-window.lib;sfml-system.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Crow.cpp" />
@@ -162,7 +171,6 @@
     <ClInclude Include="src\Sheep.h" />
     <ClInclude Include="src\Grass.h" />
     <ClInclude Include="src\Agent.h" />
-    <ClInclude Include="src\Simulation.h" />
     <ClInclude Include="include\SFML\Audio.hpp" />
     <ClInclude Include="include\SFML\Audio\AlResource.hpp" />
     <ClInclude Include="include\SFML\Audio\Export.hpp" />
@@ -261,6 +269,7 @@
     <ClInclude Include="include\SFML\Window\Window.hpp" />
     <ClInclude Include="include\SFML\Window\WindowHandle.hpp" />
     <ClInclude Include="include\SFML\Window\WindowStyle.hpp" />
+    <ClInclude Include="src\Simulation.h" />
     <ClInclude Include="src\Wolf.h" />
   </ItemGroup>
   <ItemGroup>

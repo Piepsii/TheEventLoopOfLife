@@ -332,9 +332,6 @@
     <ClInclude Include="include\SFML\Window.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Simulation.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Agent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -348,6 +345,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Crow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Simulation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
