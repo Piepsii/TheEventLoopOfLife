@@ -9,7 +9,7 @@ Simulation::Simulation(unsigned int _screenWidth, unsigned int _screenHeight, un
 	screenHeight = _screenHeight;
 	gridSize = _gridSize;
 
-	const float tileSize = float(screenWidth) / float(gridSize);
+	tileSize = float(screenWidth) / float(gridSize);
 	int tileAmount = gridSize * gridSize;
 
 	grassArray = new Grass[tileAmount];
@@ -47,6 +47,8 @@ Simulation::~Simulation()
 
 bool Simulation::Update(float deltaTime)
 {
+	tileSize = float(screenWidth) / float(gridSize);
+
 	for (int i = 0; i < gridSize * gridSize; i++) {
 		if (senseDecideCounter == 0) {
 			grassArray[i].Sense();
@@ -68,6 +70,7 @@ bool Simulation::Update(float deltaTime)
 		}
 
 		sheepArray[i].Act();
+		sheepArray[i].updateShape(tileSize);
 	}
 
 	senseDecideCounter++;

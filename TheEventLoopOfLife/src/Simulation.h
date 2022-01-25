@@ -21,7 +21,7 @@ private:
 	Sheep* sheepArray = nullptr;
 	unsigned int sheepAmount = 10;
 	unsigned int screenWidth, screenHeight;
-	unsigned int gridSize;
+	unsigned int gridSize, tileSize;
 	unsigned int grassSpawnChance = 30;
 	unsigned int senseDecideFrequency = 10, senseDecideCounter = 0;
 };
