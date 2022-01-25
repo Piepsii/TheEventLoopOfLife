@@ -10,7 +10,7 @@ Grass::Grass()
 void Grass::Create()
 {
 	rect = sf::RectangleShape(sf::Vector2f(size, size));
-	rect.setPosition((size + 1) * posX, (size + 1) * posY);
+	rect.setPosition((size + 1) * pos.x, (size + 1) * pos.y);
 	rect.setFillColor(dirt);
 }
 
@@ -51,17 +51,6 @@ sf::RectangleShape Grass::getRect()
 	return rect;
 }
 
-void Grass::setSize(float _size)
-{
-	size = _size;
-}
-
-void Grass::setPos(int _posX, int _posY)
-{
-	posX = _posX;
-	posY = _posY;
-}
-
 void Grass::setState(GrassState _state)
 {
 	state = _state;
@@ -77,11 +66,11 @@ int Grass::getRandomNeighborAsIndex()
 	int neighborX = -1, neighborY = -1;
 	while (neighborX < 0 || neighborX > 9) {
 		int offsetX = rand() % 3 - 1;
-		neighborX = posX + offsetX;
+		neighborX = pos.x + offsetX;
 	}
 	while (neighborY < 0 || neighborY > 9) {
 		int offsetY = rand() % 3 - 1;
-		neighborY = posY + offsetY;
+		neighborY = pos.y + offsetY;
 	}
 
 	int index = neighborX * 10 + neighborY;

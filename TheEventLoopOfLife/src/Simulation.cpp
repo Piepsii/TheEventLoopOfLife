@@ -4,28 +4,45 @@
 
 Simulation::Simulation(unsigned int _screenWidth, unsigned int _screenHeight, unsigned int _gridSize)
 {
-	srand(time(NULL));
+	srand(time(0));
 	screenWidth = _screenWidth;
 	screenHeight = _screenHeight;
 	gridSize = _gridSize;
 
-	const float tileSize = screenWidth / gridSize;
+	const float tileSize = float(screenWidth) / float(gridSize);
 	int tileAmount = gridSize * gridSize;
 
 	grassArray = new Grass[tileAmount];
 	for (int i = 0; i < tileAmount; i++) {
 		grassArray[i].setSize(tileSize);
-		grassArray[i].setPos((i % gridSize), floor(i / gridSize));
+		grassArray[i].setPos(
+			i % gridSize,
+			floor(i / gridSize));
 		grassArray[i].Create();
-		if (rand() % 100 < grassSpawnChance) {
+		if (rand() % 100 < (int) grassSpawnChance) {
 			grassArray[i].setState(GrassState::Seed);
-			grassArray[i].setHealth(0.01);
+			grassArray[i].setHealth(0.01f);
 		}
+	}
+
+	sheepArray = new Sheep[sheepAmount];
+	for (int i = 0; i < (int) sheepAmount; i++) {
+		float sheepSize = tileSize * 0.3f;
+		sheepArray[i].setSize(sheepSize);
+		sf::Vector2i pos = sf::Vector2i(
+			rand() % gridSize,
+			rand() % gridSize);
+		sheepArray[i].setPos(pos);
+		sheepArray[i].Create(tileSize);
 	}
 }
 
 Simulation::~Simulation()
 {
+	delete[] grassArray;
+	grassArray = nullptr;
+	delete[] sheepArray;
+	sheepArray = nullptr;
 }
 
 bool Simulation::Update(float deltaTime)
@@ -44,6 +61,15 @@ bool Simulation::Update(float deltaTime)
 		}
 	}
 
+	for (int i = 0; i < sheepAmount; i++) {
+		if (senseDecideCounter == 0) {
+			sheepArray[i].Sense();
+			sheepArray[i].Decide();
+		}
+
+		sheepArray[i].Act();
+	}
+
 	senseDecideCounter++;
 	if (senseDecideCounter == senseDecideFrequency)
 		senseDecideCounter = 0;
@@ -55,5 +81,9 @@ void Simulation::Draw(sf::RenderWindow& _window)
 {
 	for (int i = 0; i < gridSize * gridSize; i++) {
 		_window.draw(grassArray[i].getRect());
+	}
+
+	for (int i = 0; i < sheepAmount; i++) {
+		_window.draw(sheepArray[i].getCircle());
 	}
 }

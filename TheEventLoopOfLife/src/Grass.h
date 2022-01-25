@@ -24,8 +24,6 @@ public:
     
     sf::RectangleShape getRect();
 
-    void setSize(float _size);
-    void setPos(int _posX, int _posY);
     void setState(GrassState _state);
     void setHealth(float _health);
     int getRandomNeighborAsIndex();
@@ -36,10 +34,8 @@ public:
 private:
     sf::RectangleShape rect;
     sf::Color seed, mature, dirt;
-    float size = 5.0f;
     float health = 0.0f;
     float growthFactor = 0.001f, witherFactor = 0.001f;
-    int posX, posY;
     bool isTrampled;
     bool canGrow = true;
 
