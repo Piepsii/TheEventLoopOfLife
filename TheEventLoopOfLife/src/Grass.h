@@ -18,13 +18,16 @@ class Grass :
 public:
     Grass();
     void Create();
-    void Update();
+    void Sense();
+    void Decide();
+    void Act();
     
     sf::RectangleShape getRect();
 
     void setSize(float _size);
     void setPos(int _posX, int _posY);
     void setState(GrassState _state);
+    void setHealth(float _health);
     int getRandomNeighborAsIndex();
 
     int spreadChance = 1;

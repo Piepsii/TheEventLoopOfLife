@@ -20,5 +20,6 @@ private:
 	unsigned int screenWidth, screenHeight;
 	unsigned int gridSize;
 	unsigned int grassSpawnChance = 30;
+	unsigned int senseDecideFrequency = 10, senseDecideCounter = 0;
 };
 

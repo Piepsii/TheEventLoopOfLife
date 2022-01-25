@@ -19,6 +19,7 @@ Simulation::Simulation(unsigned int _screenWidth, unsigned int _screenHeight, un
 		grassArray[i].Create();
 		if (rand() % 100 < grassSpawnChance) {
 			grassArray[i].setState(GrassState::Seed);
+			grassArray[i].setHealth(0.01);
 		}
 	}
 }
@@ -30,13 +31,23 @@ Simulation::~Simulation()
 bool Simulation::Update(float deltaTime)
 {
 	for (int i = 0; i < gridSize * gridSize; i++) {
-		grassArray[i].Update();
+		if (senseDecideCounter == 0) {
+			grassArray[i].Sense();
+			grassArray[i].Decide();
+		}
+
+		grassArray[i].Act();
 		if (rand() % 100 < grassArray[i].spreadChance && grassArray[i].state == GrassState::Mature) {
 			int spreadTo = grassArray[i].getRandomNeighborAsIndex();
 			if(grassArray[spreadTo].state ==GrassState::Dirt )
 				grassArray[spreadTo].setState(GrassState::Seed);
 		}
 	}
+
+	senseDecideCounter++;
+	if (senseDecideCounter == senseDecideFrequency)
+		senseDecideCounter = 0;
+
 	return true;
 }
 

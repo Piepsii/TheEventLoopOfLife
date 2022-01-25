@@ -14,26 +14,35 @@ void Grass::Create()
 	rect.setFillColor(dirt);
 }
 
-void Grass::Update()
+void Grass::Sense()
+{
+
+}
+
+void Grass::Decide()
+{
+	if (health >= 1.0f)
+		state = GrassState::Mature;
+
+	if (health <= 0.0f)
+		state = GrassState::Dirt;
+}
+
+void Grass::Act()
 {
 	switch (state) {
-		case GrassState::Seed:
-			health < 1.1f ? health += growthFactor : health = health;
-			rect.setFillColor(LerpRGB(seed, mature, health));
+	case GrassState::Seed:
+		health < 1.1f ? health += growthFactor : health = health;
+		rect.setFillColor(LerpRGB(seed, mature, health));
 
+		break;
+	case GrassState::Mature:
+		health > 0.0f ? health -= witherFactor : health = health;
+		rect.setFillColor(LerpRGB(mature, dirt, (1.0f - health)));
 
-			if (health >= 1.0f)
-				state = GrassState::Mature;
-			break;
-		case GrassState::Mature:
-			health > 0.0f ? health -= witherFactor : health = health;
-			rect.setFillColor(LerpRGB(mature, dirt, (1.0f - health)));
-
-			if (health <= 0.0f)
-				state = GrassState::Dirt;
-			break;
-		case GrassState::Dirt:
-			break;
+		break;
+	case GrassState::Dirt:
+		break;
 	}
 }
 
@@ -56,6 +65,11 @@ void Grass::setPos(int _posX, int _posY)
 void Grass::setState(GrassState _state)
 {
 	state = _state;
+}
+
+void Grass::setHealth(float _health)
+{
+	health = _health;
 }
 
 int Grass::getRandomNeighborAsIndex()
