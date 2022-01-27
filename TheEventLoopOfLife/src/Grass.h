@@ -30,11 +30,11 @@ public:
 
     int spreadChance = 1;
     GrassState state = GrassState::Dirt;
+    float health = 0.0f;
 
 private:
     sf::RectangleShape rect;
     sf::Color seed, mature, dirt;
-    float health = 0.0f;
     float growthFactor = 0.001f, witherFactor = 0.001f;
     bool isTrampled;
     bool canGrow = true;

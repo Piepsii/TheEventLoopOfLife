@@ -4,7 +4,7 @@
 class Agent
 {
 public:
-	virtual void Sense() = 0;
+	virtual void Sense();
 	virtual void Decide() = 0;
 	virtual void Act() = 0;
 
@@ -12,9 +12,10 @@ public:
 	void setPos(sf::Vector2i _pos);
 	void setPos(int _x, int _y);
 
+	sf::Vector2i pos = sf::Vector2i(0, 0);
+
 protected:
 	float size;
-	sf::Vector2i pos = sf::Vector2i(0, 0);
 
 };
 

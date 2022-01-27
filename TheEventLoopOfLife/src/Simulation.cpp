@@ -58,14 +58,19 @@ bool Simulation::Update(float deltaTime)
 		grassArray[i].Act();
 		if (rand() % 100 < grassArray[i].spreadChance && grassArray[i].state == GrassState::Mature) {
 			int spreadTo = grassArray[i].getRandomNeighborAsIndex();
-			if(grassArray[spreadTo].state ==GrassState::Dirt )
+			if(grassArray[spreadTo].state == GrassState::Dirt )
 				grassArray[spreadTo].setState(GrassState::Seed);
 		}
 	}
 
 	for (int i = 0; i < sheepAmount; i++) {
 		if (senseDecideCounter == 0) {
-			sheepArray[i].Sense();
+			sf::Vector2i pos = sheepArray[i].pos;
+			int grassIndex = pos.x + gridSize * pos.y;
+			Grass grassBelow = grassArray[grassIndex];
+			Grass* grassInFront = new Grass[3];
+			// NOT IMPLEMENTED
+			sheepArray[i].Sense(grassBelow, grassInFront);
 			sheepArray[i].Decide();
 		}
 
@@ -87,6 +92,7 @@ void Simulation::Draw(sf::RenderWindow& _window)
 	}
 
 	for (int i = 0; i < sheepAmount; i++) {
-		_window.draw(sheepArray[i].getCircle());
+		_window.draw(sheepArray[i].getBody());
+		_window.draw(sheepArray[i].getHead());
 	}
 }

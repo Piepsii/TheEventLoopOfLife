@@ -7,12 +7,16 @@ int main() {
     sf::VideoMode videoMode;
     const char* title = "The Event Loop of Life";
 
-    Simulation* sim = new Simulation(640, 640, 10);
-    sf::RenderWindow window(sf::VideoMode(640, 640), title);
+    // 10 tiles * 32 pixels + 9 borders
+    const int width = 649;
+    const int height = 649;
+
+    Simulation* sim = new Simulation(width, height, 10);
+    sf::RenderWindow window(sf::VideoMode(width, height), title);
 
     sf::Clock clock;
     sf::Time delta;
-    float frameTime = 1.0f / 60.0f;
+    float frameTime = 1.0f / 20.0f;
     bool running = true;
     
     while (running)

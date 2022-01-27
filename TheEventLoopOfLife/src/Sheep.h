@@ -1,6 +1,7 @@
 #pragma once
 #include "Agent.h"
 #include <SFML/Graphics.hpp>
+#include "Grass.h"
 
 enum class SheepState {
     Evading,
@@ -17,12 +18,13 @@ public:
     Sheep();
     void Create(float _tileSize);
 
-    void Sense();
+    void Sense(Grass& _grassBelow, Grass* _grassInFront);
     void Decide();
     void Act();
 
     void updateShape(float _tileSize);
-    sf::CircleShape getCircle();
+    sf::CircleShape getBody();
+    sf::CircleShape getHead();
 
 private:
     void Eat();
@@ -34,8 +36,13 @@ private:
 
     float health = 1.0f;
     float moveSpeed = 0.001f;
-    sf::CircleShape circle;
+    float hunger = 0.01f;
+    float headSize = 2.0f;
+    sf::CircleShape body, head;
     SheepState state = SheepState::Wandering;
+    Grass* grassBelow = nullptr;
+    Grass* grassInFront = nullptr;
+    sf::Vector2i direction = sf::Vector2i(0, 0);
 };
 
 static float lerp(float a, float b, float f)

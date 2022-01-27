@@ -32,7 +32,7 @@ void Grass::Act()
 {
 	switch (state) {
 	case GrassState::Seed:
-		health < 1.1f ? health += growthFactor : health = health;
+		health < 1.0f ? health += growthFactor : health = health;
 		rect.setFillColor(LerpRGB(seed, mature, health));
 
 		break;

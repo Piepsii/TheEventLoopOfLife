@@ -1,5 +1,9 @@
 #include "Agent.h"
 
+void Agent::Sense()
+{
+}
+
 void Agent::setSize(float _size)
 {
 	size = _size;
