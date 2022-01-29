@@ -21,6 +21,8 @@ public:
     void Sense();
     void Decide();
     void Act();
+
+    void DrawDebug();
     
     sf::RectangleShape getRect();
 
@@ -31,6 +33,7 @@ public:
     int spreadChance = 1;
     GrassState state = GrassState::Dirt;
     float health = 0.0f;
+    bool marked = false;
 
 private:
     sf::RectangleShape rect;

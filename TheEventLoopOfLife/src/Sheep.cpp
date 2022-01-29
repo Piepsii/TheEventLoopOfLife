@@ -23,35 +23,33 @@ void Sheep::Create(float _tileSize)
 	head.setFillColor(sf::Color::Black);
 }
 
-void Sheep::Sense(Grass& _grassBelow, Grass* _grassInFront)
+void Sheep::Sense()
 {
+
 	// GATHER DATA
-	// am i standing on grass?
- 	grassBelow = &_grassBelow;
 	// is there a wolf nearby?
 	// can i reproduce?
 	// am i hungry?
-	// do i see grass?
 }
 
 void Sheep::Decide()
 {
 	// SET THE STATE MACHINE
 	// if standing on grass & hungry > Eating
-	if (grassBelow->state == GrassState::Mature) {
-		state = SheepState::Eating;
-		return;
-	}
-	// if able to reproduce > breeding
-	// if hungry & near grass > finding
-	// if not near grass > wandering
-	if (grassBelow->state != GrassState::Mature) {
-		state = SheepState::Wandering;
-		return;
-	}
+	//if (grassBelow->state == GrassState::Mature) {
+	//	state = SheepState::Eating;
+	//	return;
+	//}
+	//// if able to reproduce > breeding
+	//// if hungry & near grass > finding
+	//// if not near grass > wandering
+	//if (grassBelow->state != GrassState::Mature) {
+	//	state = SheepState::Wandering;
+	//	return;
+	//}
 }
 
-void Sheep::Act()
+void Sheep::Act(std::vector<Grass>& _grassArray)
 {
 	// SWITCH THE STATE MACHINE
 	Age();
@@ -75,6 +73,35 @@ void Sheep::Act()
 	case SheepState::Wandering:
 		Wander();
 		break;
+	}
+
+	CalculateLineOfSight(_grassArray);
+	
+	if (debug) {
+		for (int i = 0; i < grassInFront.size(); i++) {
+			grassInFront[i]->marked = true;
+		}
+	}
+}
+
+void Sheep::CalculateLineOfSight(std::vector<Grass>& _grassArray)
+{
+	int grassAmount = _grassArray.size();
+	int gridSize = sqrt(grassAmount);
+	int index = pos.x + pos.y * gridSize;
+	grassBelow = &_grassArray[index];
+	grassInFront.clear();
+
+	for (int yOffset = 0, x = 1; x <= 1 + senseRange * 2; x += 2, yOffset--) {
+		for (int y = yOffset; y <= -yOffset; y++) {
+			sf::Vector2i grasPos = direction.y == 0
+				? sf::Vector2i(pos.x - yOffset * direction.x, pos.y + y)
+				: sf::Vector2i(pos.x + y, pos.y - yOffset * direction.y);
+			if (grasPos.x >= gridSize || grasPos.x < 0 || grasPos.y >= gridSize|| grasPos.y < 0)
+				continue;
+			int gridIndex = grasPos.x + grasPos.y * gridSize;
+			grassInFront.push_back(&_grassArray[gridIndex]);
+		}
 	}
 }
 
@@ -117,17 +144,21 @@ void Sheep::Wander()
 	sf::Vector2f vec = body.getPosition();
 
 	sf::Vector2i newPos = pos;
+	direction = sf::Vector2i(0, 0);
+	int moveX;
 	do {
-		int moveX = rand() % 3 - 1;
+		moveX = rand() % 3 - 1;
 		newPos.x += moveX;
 		direction.x = moveX;
 	} while (newPos.x < 0 || newPos.x > 9);
 
-	do {
-		int moveY = rand() % 3 - 1;
-		newPos.y += moveY;
-		direction.y = moveY;
-	} while (newPos.y < 0 || newPos.y > 9);
+	if (moveX == 0) {
+		do {
+			int moveY = rand() % 2 * 2 - 1;
+			newPos.y += moveY;
+			direction.y = moveY;
+		} while (newPos.y < 0 || newPos.y > 9);
+	}
 	pos = newPos;
 }
 

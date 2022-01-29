@@ -16,7 +16,7 @@ int main() {
 
     sf::Clock clock;
     sf::Time delta;
-    float frameTime = 1.0f / 20.0f;
+    float frameTime = 1.0f / 5.0f;
     bool running = true;
     
     while (running)

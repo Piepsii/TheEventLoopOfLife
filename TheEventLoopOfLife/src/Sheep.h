@@ -18,14 +18,17 @@ public:
     Sheep();
     void Create(float _tileSize);
 
-    void Sense(Grass& _grassBelow, Grass* _grassInFront);
+    void Sense();
     void Decide();
-    void Act();
+    void Act(std::vector<Grass>& _grassArray);
+
+    void CalculateLineOfSight(std::vector<Grass>& _grassArray);
 
     void updateShape(float _tileSize);
     sf::CircleShape getBody();
     sf::CircleShape getHead();
 
+    bool debug = false;
 private:
     void Eat();
     void Breed();
@@ -34,6 +37,8 @@ private:
     void Age();
     void Die();
 
+    int senseRange = 5;
+    int eatRange = 1;
     float health = 1.0f;
     float moveSpeed = 0.001f;
     float hunger = 0.01f;
@@ -41,7 +46,7 @@ private:
     sf::CircleShape body, head;
     SheepState state = SheepState::Wandering;
     Grass* grassBelow = nullptr;
-    Grass* grassInFront = nullptr;
+    std::vector<Grass*> grassInFront = {};
     sf::Vector2i direction = sf::Vector2i(0, 0);
 };
 

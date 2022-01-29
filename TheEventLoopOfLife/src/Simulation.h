@@ -17,8 +17,8 @@ public:
 	void Draw(sf::RenderWindow& _window);
 
 private:
-	Grass* grassArray = nullptr;
-	Sheep* sheepArray = nullptr;
+	std::vector<Grass> grassArray;
+	std::vector<Sheep*> sheepArray;
 	unsigned int sheepAmount = 10;
 	unsigned int screenWidth, screenHeight;
 	unsigned int gridSize, tileSize;

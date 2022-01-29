@@ -4,6 +4,10 @@ void Agent::Sense()
 {
 }
 
+void Agent::Act()
+{
+}
+
 void Agent::setSize(float _size)
 {
 	size = _size;

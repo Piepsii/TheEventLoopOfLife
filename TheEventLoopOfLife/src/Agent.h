@@ -6,7 +6,7 @@ class Agent
 public:
 	virtual void Sense();
 	virtual void Decide() = 0;
-	virtual void Act() = 0;
+	virtual void Act();
 
 	void setSize(float _size);
 	void setPos(sf::Vector2i _pos);

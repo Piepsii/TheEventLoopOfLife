@@ -12,11 +12,11 @@ void Grass::Create()
 	rect = sf::RectangleShape(sf::Vector2f(size, size));
 	rect.setPosition((size + 1) * pos.x, (size + 1) * pos.y);
 	rect.setFillColor(dirt);
+	rect.setOutlineThickness(1.0f);
 }
 
 void Grass::Sense()
 {
-
 }
 
 void Grass::Decide()
@@ -44,6 +44,19 @@ void Grass::Act()
 	case GrassState::Dirt:
 		break;
 	}
+}
+
+void Grass::DrawDebug()
+{
+	if (marked) {
+		rect.setOutlineColor(sf::Color::Red);
+		rect.setOutlineThickness(2.0f);
+	}
+	else {
+		rect.setOutlineColor(sf::Color::Black);
+		rect.setOutlineThickness(0.0f);
+	}
+	marked = false;
 }
 
 sf::RectangleShape Grass::getRect()

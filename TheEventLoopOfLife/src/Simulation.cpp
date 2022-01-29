@@ -11,38 +11,37 @@ Simulation::Simulation(unsigned int _screenWidth, unsigned int _screenHeight, un
 
 	tileSize = float(screenWidth) / float(gridSize);
 	int tileAmount = gridSize * gridSize;
-
-	grassArray = new Grass[tileAmount];
+;
 	for (int i = 0; i < tileAmount; i++) {
-		grassArray[i].setSize(tileSize);
-		grassArray[i].setPos(
+		Grass grass = Grass();
+		grass.setSize(tileSize);
+		grass.setPos(
 			i % gridSize,
 			floor(i / gridSize));
-		grassArray[i].Create();
+		grass.Create();
 		if (rand() % 100 < (int) grassSpawnChance) {
-			grassArray[i].setState(GrassState::Seed);
-			grassArray[i].setHealth(0.01f);
+			grass.setState(GrassState::Seed);
+			grass.setHealth(0.01f);
 		}
+		grassArray.push_back(grass);
 	}
 
-	sheepArray = new Sheep[sheepAmount];
-	for (int i = 0; i < (int) sheepAmount; i++) {
+	for (int i = 0; i < 1 /*(int)sheepAmount*/; i++) {
+		Sheep* sheep = new Sheep();
 		float sheepSize = tileSize * 0.3f;
-		sheepArray[i].setSize(sheepSize);
+		sheep->setSize(sheepSize);
 		sf::Vector2i pos = sf::Vector2i(
 			rand() % gridSize,
 			rand() % gridSize);
-		sheepArray[i].setPos(pos);
-		sheepArray[i].Create(tileSize);
+		sheep->setPos(pos);
+		sheep->Create(tileSize);
+		sheepArray.push_back(sheep);
 	}
+	sheepArray[0]->debug = true;
 }
 
 Simulation::~Simulation()
 {
-	delete[] grassArray;
-	grassArray = nullptr;
-	delete[] sheepArray;
-	sheepArray = nullptr;
 }
 
 bool Simulation::Update(float deltaTime)
@@ -63,19 +62,14 @@ bool Simulation::Update(float deltaTime)
 		}
 	}
 
-	for (int i = 0; i < sheepAmount; i++) {
+	for (int i = 0; i < sheepArray.size(); i++) {
 		if (senseDecideCounter == 0) {
-			sf::Vector2i pos = sheepArray[i].pos;
-			int grassIndex = pos.x + gridSize * pos.y;
-			Grass grassBelow = grassArray[grassIndex];
-			Grass* grassInFront = new Grass[3];
-			// NOT IMPLEMENTED
-			sheepArray[i].Sense(grassBelow, grassInFront);
-			sheepArray[i].Decide();
+			sheepArray[i]->Sense();
+			sheepArray[i]->Decide();
 		}
 
-		sheepArray[i].Act();
-		sheepArray[i].updateShape(tileSize);
+		sheepArray[i]->Act(grassArray);
+		sheepArray[i]->updateShape(tileSize);
 	}
 
 	senseDecideCounter++;
@@ -87,12 +81,13 @@ bool Simulation::Update(float deltaTime)
 
 void Simulation::Draw(sf::RenderWindow& _window)
 {
-	for (int i = 0; i < gridSize * gridSize; i++) {
+	for (int i = 0; i < grassArray.size(); i++) {
+		grassArray[i].DrawDebug();
 		_window.draw(grassArray[i].getRect());
 	}
 
-	for (int i = 0; i < sheepAmount; i++) {
-		_window.draw(sheepArray[i].getBody());
-		_window.draw(sheepArray[i].getHead());
+	for (int i = 0; i < sheepArray.size(); i++) {
+		_window.draw(sheepArray[i]->getBody());
+		_window.draw(sheepArray[i]->getHead());
 	}
 }
