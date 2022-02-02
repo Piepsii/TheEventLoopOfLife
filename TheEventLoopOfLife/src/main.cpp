@@ -1,9 +1,11 @@
 #include <SFML\Graphics.hpp>
 #include "Simulation.h"
+#include "InputManager.h"
 
 int main() {
     sf::VideoMode videoMode;
     const char* title = "The Event Loop of Life";
+    InputManager input = InputManager();
 
     // 10 tiles * 32 pixels + 9 borders
     const int width = 649;
@@ -18,7 +20,8 @@ int main() {
 
     sf::Clock clock;
     sf::Time delta;
-    float frameTime = 1.0f / 60.0f;
+    float hertz = 60.0f;
+    float frameTime = 1.0f / hertz;
     bool running = true;
     
     while (running)
@@ -27,9 +30,26 @@ int main() {
         delta = clock.restart();
         while (window.pollEvent(event))
         {
-            if (event.type == sf::Event::Closed)
+            switch (event.type) {
+            case sf::Event::KeyPressed:
+                input.setKey(event.key.code, true);
+                break;
+            case sf::Event::KeyReleased:
+                input.setKey(event.key.code, false);
+                break;
+            case sf::Event::Closed:
                 window.close();
+                break;
+            }
         }
+
+        if (input.isKeyPressed(sf::Keyboard::Key::Down)) {
+            hertz -= 10.0f;
+        }
+        if (input.isKeyPressed(sf::Keyboard::Key::Up)) {
+            hertz += 10.0f;
+        }
+        frameTime = 1.0f / hertz;
 
         window.clear(sf::Color::Black);
         window.setActive();

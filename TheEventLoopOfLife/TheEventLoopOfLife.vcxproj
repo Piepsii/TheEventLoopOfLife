@@ -153,6 +153,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\InputManager.cpp" />
     <ClCompile Include="src\Grid.cpp" />
     <ClCompile Include="src\Crow.cpp" />
     <ClCompile Include="src\Sheep.cpp" />
@@ -168,6 +169,7 @@
     <ClCompile Include="src\Wolf.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\InputManager.h" />
     <ClInclude Include="src\Grid.h" />
     <ClInclude Include="src\Crow.h" />
     <ClInclude Include="src\Sheep.h" />
