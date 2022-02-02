@@ -2,53 +2,24 @@
 
 #include "Simulation.h"
 
-Simulation::Simulation(unsigned int _screenWidth, unsigned int _screenHeight, unsigned int _gridSize)
+Simulation::Simulation(unsigned int _screenWidth, unsigned int _screenHeight)
+	: screenWidth(_screenWidth)
+	, screenHeight(_screenHeight)
 {
 	srand(time(0));
-	screenWidth = _screenWidth;
-	screenHeight = _screenHeight;
-	gridSize = _gridSize;
-
-	tileSize = float(screenWidth) / float(gridSize);
-	int tileAmount = gridSize * gridSize;
-;
-	for (int i = 0; i < tileAmount; i++) {
-		Grass grass = Grass();
-		grass.setSize(tileSize);
-		grass.setPos(
-			i % gridSize,
-			floor(i / gridSize));
-		grass.Create();
-		if (rand() % 100 < (int) grassSpawnChance) {
-			grass.setState(GrassState::Seed);
-			grass.setHealth(0.01f);
-		}
-		grassArray.push_back(grass);
-	}
-
-	for (int i = 0; i < 1 /*(int)sheepAmount*/; i++) {
-		Sheep* sheep = new Sheep();
-		float sheepSize = tileSize * 0.3f;
-		sheep->setSize(sheepSize);
-		sf::Vector2i pos = sf::Vector2i(
-			rand() % gridSize,
-			rand() % gridSize);
-		sheep->setPos(pos);
-		sheep->Create(tileSize);
-		sheepArray.push_back(sheep);
-	}
-	sheepArray[0]->debug = true;
 }
 
 Simulation::~Simulation()
 {
+	for (int i = 0; i < sheepArray.size(); i++) {
+		delete sheepArray[i];
+		sheepArray[i] = nullptr;
+	}
 }
 
 bool Simulation::Update(float deltaTime)
 {
-	tileSize = float(screenWidth) / float(gridSize);
-
-	for (int i = 0; i < gridSize * gridSize; i++) {
+	for (int i = 0; i < grid.Rows() * grid.Columns(); i++) {
 		if (senseDecideCounter == 0) {
 			grassArray[i].Sense();
 			grassArray[i].Decide();
@@ -69,7 +40,7 @@ bool Simulation::Update(float deltaTime)
 		}
 
 		sheepArray[i]->Act(grassArray);
-		sheepArray[i]->updateShape(tileSize);
+		sheepArray[i]->updateShape(grid.TileSize());
 	}
 
 	senseDecideCounter++;
@@ -90,4 +61,38 @@ void Simulation::Draw(sf::RenderWindow& _window)
 		_window.draw(sheepArray[i]->getBody());
 		_window.draw(sheepArray[i]->getHead());
 	}
+}
+
+void Simulation::createGrid(unsigned int _columns, unsigned int _rows)
+{
+	unsigned int tileSize = float(screenWidth) / float(grid.Columns());
+	grid = Grid(_columns, _rows, 1, tileSize);
+
+	int tileAmount = _columns * _rows;
+
+	for (int i = 0; i < tileAmount; i++) {
+		Grass grass = Grass();
+		grass.setSize(tileSize);
+		grass.setPos(
+			i % _columns,
+			floor(i / _rows));
+		grass.Create();
+		if (rand() % 100 < (int)grassSpawnChance) {
+			grass.setState(GrassState::Seed);
+			grass.setHealth(0.01f);
+		}
+		grassArray.push_back(grass);
+	}
+
+	for (int i = 0; i < 1 /*(int)sheepAmount*/; i++) {
+		Sheep* sheep = new Sheep();
+		float sheepSize = tileSize * 0.3f;
+		sheep->setSize(sheepSize);
+		sheep->setPos(
+			rand() % _columns,
+			rand() % _rows);
+		sheep->Create(tileSize);
+		sheepArray.push_back(sheep);
+	}
+	sheepArray[0]->debug = true;
 }

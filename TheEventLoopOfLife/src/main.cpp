@@ -1,5 +1,3 @@
-//main.cpp
-
 #include <SFML\Graphics.hpp>
 #include "Simulation.h"
 
@@ -11,12 +9,16 @@ int main() {
     const int width = 649;
     const int height = 649;
 
-    Simulation* sim = new Simulation(width, height, 10);
+    const unsigned int rows = 10;
+    const unsigned int columns = 10;
+
+    Simulation* sim = new Simulation(width, height);
+    sim->createGrid(rows, columns);
     sf::RenderWindow window(sf::VideoMode(width, height), title);
 
     sf::Clock clock;
     sf::Time delta;
-    float frameTime = 1.0f / 5.0f;
+    float frameTime = 1.0f / 60.0f;
     bool running = true;
     
     while (running)
