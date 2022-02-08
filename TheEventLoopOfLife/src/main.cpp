@@ -12,8 +12,8 @@ int main() {
     const int width = 649;
     const int height = 649;
 
-    const unsigned int rows = 10;
-    const unsigned int columns = 10;
+    const unsigned int rows = 20;
+    const unsigned int columns = 20;
 
     Simulation* sim = new Simulation(width, height, rows, columns);
     sf::RenderWindow window(sf::VideoMode(width, height), title);

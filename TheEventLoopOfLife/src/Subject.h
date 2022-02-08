@@ -12,6 +12,7 @@ class Subject {
 public:
 	void addObserver(Observer* _observer);
 	void removeObserver(Observer* _observer);
+	void removeAll();
 
 protected:
 	virtual void notify(const Agent* _agent, Event _event);

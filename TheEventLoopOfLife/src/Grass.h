@@ -15,6 +15,12 @@ enum class GrassState {
     Dirt
 };
 
+enum class GridState {
+    CORNER,
+    EDGE,
+    CENTRAL
+};
+
 class Grass : public Agent, public Observer, public Subject
 {
 public:
@@ -23,19 +29,17 @@ public:
     void Sense();
     void Decide();
     void Act();
-
     void DrawDebug();
-    
-    sf::RectangleShape getRect();
 
+    sf::RectangleShape getRect();
     void setState(GrassState _state);
     void setHealth(float _health);
     int getRandomNeighborAsIndex();
-
     void onNotify(const Agent& _agent, Event _event) override;
 
     int spreadChance = 1;
     GrassState state = GrassState::Dirt;
+    GridState gridState = GridState::CENTRAL;
     float health = 0.0f;
     bool marked = false;
 
@@ -47,7 +51,6 @@ private:
     bool canGrow = true;
 
 };
-
 
 // https://www.alanzucconi.com/2016/01/06/colour-interpolation/
 static sf::Color LerpRGB(sf::Color a, sf::Color b, float t)

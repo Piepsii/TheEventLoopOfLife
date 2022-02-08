@@ -12,13 +12,6 @@ Simulation::Simulation(uint32_t _screenWidth, uint32_t _screenHeight, uint32_t _
 
 Simulation::~Simulation()
 {
-	for (int i = 0; i < sheepArray.size(); i++) {
-		for (int j = 0; j < grassArray.size(); ++j) {
-			sheepArray[i]->removeObserver(&grassArray[j]);
-		}
-		delete sheepArray[i];
-		sheepArray[i] = nullptr;
-	}
 }
 
 bool Simulation::Update(float deltaTime)

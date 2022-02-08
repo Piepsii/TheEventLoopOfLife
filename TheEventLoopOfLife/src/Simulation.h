@@ -18,10 +18,6 @@ public:
 
 private:
 	World* world;
-	Grid grid;
-	std::vector<Grass> grassArray;
-	std::vector<Sheep*> sheepArray;
-	uint32_t sheepAmount = 10;
 	uint32_t screenWidth, screenHeight;
 	uint32_t senseDecideFrequency = 10, senseDecideCounter = 0;
 };

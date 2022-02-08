@@ -30,6 +30,7 @@ void Grass::Decide()
 	if (wasTrampled) {
 		setState(GrassState::Dirt);
 		health = 0.0f;
+		wasTrampled = false;
 	}
 }
 
@@ -44,6 +45,7 @@ void Grass::Act()
 	case GrassState::Mature:
 		health > 0.0f ? health -= witherFactor : health = health;
 		rect.setFillColor(LerpRGB(mature, dirt, (1.0f - health)));
+		notify(this, Event::EVENT_GROW);
 
 		break;
 	case GrassState::Dirt:
@@ -101,6 +103,13 @@ void Grass::onNotify(const Agent& _agent, Event _event) {
 	case Event::EVENT_TRAMPLE:
 		if (_agent.pos == pos && state != GrassState::Dirt) {
 			wasTrampled = true;
+		}
+		break;
+	case Event::EVENT_GROW:
+		if (rand() % 1000 < spreadChance) {
+			if (state == GrassState::Dirt) {
+				setState(GrassState::Seed);
+			}
 		}
 		break;
 	}
