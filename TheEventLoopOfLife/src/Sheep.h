@@ -31,9 +31,9 @@ public:
 
     void Sense();
     void Decide();
-    void Act(std::vector<Grass>& _grassArray);
+    void Act(std::vector<Grass*>& _grassArray);
 
-    void CalculateLineOfSight(std::vector<Grass>& _grassArray);
+    void CalculateLineOfSight(std::vector<Grass*>& _grassArray);
 
     void updateShape(float _tileSize);
     sf::CircleShape getBody();

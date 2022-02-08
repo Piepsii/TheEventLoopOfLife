@@ -4,26 +4,25 @@
 #include "Grass.h"
 #include "Sheep.h"
 #include "Grid.h"
+#include "World.h"
 #include <random>
 
 class Simulation
 {
 public:
-	Simulation(unsigned int _screenWidth, unsigned int _screenHeight);
+	Simulation(uint32_t _screenWidth, uint32_t _screenHeight, uint32_t _columns, uint32_t _rows);
 	~Simulation();
 
 	bool Update(float deltaTime);
 	void Draw(sf::RenderWindow& _window);
 
-	void createGrid(unsigned int _columns, unsigned int _rows);
-
 private:
+	World* world;
 	Grid grid;
 	std::vector<Grass> grassArray;
 	std::vector<Sheep*> sheepArray;
-	unsigned int sheepAmount = 10;
-	unsigned int screenWidth, screenHeight;
-	unsigned int grassSpawnChance = 30;
-	unsigned int senseDecideFrequency = 10, senseDecideCounter = 0;
+	uint32_t sheepAmount = 10;
+	uint32_t screenWidth, screenHeight;
+	uint32_t senseDecideFrequency = 10, senseDecideCounter = 0;
 };
 

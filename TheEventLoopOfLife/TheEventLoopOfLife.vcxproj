@@ -171,6 +171,7 @@
     <ClCompile Include="src\Subject.cpp" />
     <ClCompile Include="src\Wolf.cpp" />
     <ClCompile Include="src\Time.cpp" />
+    <ClCompile Include="src\World.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Event.h" />
@@ -185,6 +186,7 @@
     <ClInclude Include="src\Subject.h" />
     <ClInclude Include="src\Wolf.h" />
     <ClInclude Include="src\Time.h" />
+    <ClInclude Include="src\World.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

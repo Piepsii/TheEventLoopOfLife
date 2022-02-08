@@ -15,8 +15,7 @@ int main() {
     const unsigned int rows = 10;
     const unsigned int columns = 10;
 
-    Simulation* sim = new Simulation(width, height);
-    sim->createGrid(rows, columns);
+    Simulation* sim = new Simulation(width, height, rows, columns);
     sf::RenderWindow window(sf::VideoMode(width, height), title);
 
     sf::Clock clock;

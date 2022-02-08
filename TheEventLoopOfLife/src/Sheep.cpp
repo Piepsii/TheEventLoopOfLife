@@ -51,7 +51,7 @@ void Sheep::Decide()
 	//}
 }
 
-void Sheep::Act(std::vector<Grass>& _grassArray)
+void Sheep::Act(std::vector<Grass*>& _grassArray)
 {
 	// SWITCH THE STATE MACHINE
 	Age();
@@ -86,12 +86,12 @@ void Sheep::Act(std::vector<Grass>& _grassArray)
 	}
 }
 
-void Sheep::CalculateLineOfSight(std::vector<Grass>& _grassArray)
+void Sheep::CalculateLineOfSight(std::vector<Grass*>& _grassArray)
 {
 	int grassAmount = _grassArray.size();
 	int gridSize = sqrt(grassAmount);
 	int index = pos.x + pos.y * gridSize;
-	grassBelow = &_grassArray[index];
+	grassBelow = _grassArray[index];
 	grassInFront.clear();
 
 	for (int yOffset = 0, x = 1; x <= 1 + senseRange * 2; x += 2, yOffset--) {
@@ -102,7 +102,7 @@ void Sheep::CalculateLineOfSight(std::vector<Grass>& _grassArray)
 			if (grasPos.x >= gridSize || grasPos.x < 0 || grasPos.y >= gridSize|| grasPos.y < 0)
 				continue;
 			int gridIndex = grasPos.x + grasPos.y * gridSize;
-			grassInFront.push_back(&_grassArray[gridIndex]);
+			grassInFront.push_back(_grassArray[gridIndex]);
 		}
 	}
 }
