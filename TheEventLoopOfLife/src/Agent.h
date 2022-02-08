@@ -12,7 +12,8 @@ public:
 	void setPos(sf::Vector2i _pos);
 	void setPos(int _x, int _y);
 
-	sf::Vector2i pos = sf::Vector2i(0, 0);
+	sf::Vector2i pos;
+	sf::Vector2f posf;
 
 protected:
 	float size;

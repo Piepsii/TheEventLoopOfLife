@@ -1,4 +1,5 @@
 #include "Sheep.h"
+#include "Time.h"
 
 Sheep::Sheep()
 {
@@ -21,6 +22,7 @@ void Sheep::Create(float _tileSize)
 	head.setPosition((_tileSize + 1) * pos.x + _tileSize / 2,
 					 (_tileSize + 1) * pos.y + _tileSize / 2);
 	head.setFillColor(sf::Color::Black);
+	body.setOutlineThickness(1.0f);
 }
 
 void Sheep::Sense()
@@ -107,10 +109,10 @@ void Sheep::CalculateLineOfSight(std::vector<Grass>& _grassArray)
 
 void Sheep::updateShape(float _tileSize)
 {
-	body.setPosition((_tileSize + 1) * pos.x + _tileSize / 2,
-					   (_tileSize + 1) * pos.y + _tileSize / 2);
-	head.setPosition((_tileSize + 1) * pos.x + _tileSize / 2 + direction.x * size,
-					 (_tileSize + 1) * pos.y + _tileSize / 2 + direction.y * size);
+	body.setPosition((_tileSize + 1) * posf.x + _tileSize / 2,
+					   (_tileSize + 1) * posf.y + _tileSize / 2);
+	head.setPosition((_tileSize + 1) * posf.x + _tileSize / 2 + direction.x * size,
+					 (_tileSize + 1) * posf.y + _tileSize / 2 + direction.y * size);
 }
 
 sf::CircleShape Sheep::getBody()
@@ -140,27 +142,42 @@ void Sheep::Find()
 
 void Sheep::Wander()
 {
-	body.setOutlineThickness(1.0f);
-	sf::Vector2f vec = body.getPosition();
-
-	sf::Vector2i newPos = pos;
-	direction = sf::Vector2i(0, 0);
-	int moveX;
-	do {
-		moveX = rand() % 3 - 1;
-		newPos.x += moveX;
-		direction.x = moveX;
-	} while (newPos.x < 0 || newPos.x > 9);
-
-	if (moveX == 0) {
+	switch(moveState){
+	case MoveState::Search:
+		//calculate new tile
+		newPos = pos;
+		direction = sf::Vector2i(0, 0);
+		int moveX;
 		do {
-			int moveY = rand() % 2 * 2 - 1;
-			newPos.y += moveY;
-			direction.y = moveY;
-		} while (newPos.y < 0 || newPos.y > 9);
+			moveX = rand() % 3 - 1;
+			newPos.x += moveX;
+			direction.x = moveX;
+		} while (newPos.x < 0 || newPos.x > 9);
+		if (moveX == 0) {
+			do {
+				int moveY = rand() % 2 * 2 - 1;
+				newPos.y += moveY;
+				direction.y = moveY;
+			} while (newPos.y < 0 || newPos.y > 9);
+		}
+		moveState = MoveState::Move;
+		break;
+
+	case MoveState::Move:
+		currentMoveTime += Time::deltaTime;
+		posf.x = std::lerp((float)pos.x, (float)newPos.x, currentMoveTime / moveTime);
+		posf.y = std::lerp((float)pos.y, (float)newPos.y, currentMoveTime / moveTime);
+		if (currentMoveTime >= moveTime)
+			moveState = MoveState::Arrive;
+		break;
+
+	case MoveState::Arrive:
+		currentMoveTime = 0.0f;
+		pos = newPos;
+		notify(this, Event::EVENT_TRAMPLE);
+		moveState = MoveState::Search;
+		break;
 	}
-	pos = newPos;
-	notify(this, Event::EVENT_TRAMPLE);
 }
 
 void Sheep::Age()
