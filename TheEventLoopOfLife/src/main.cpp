@@ -1,11 +1,12 @@
 #include <SFML\Graphics.hpp>
 #include "Simulation.h"
 #include "InputManager.h"
+#include "Time.h"
 
 int main() {
     sf::VideoMode videoMode;
     const char* title = "The Event Loop of Life";
-    InputManager input = InputManager();
+    InputManager input;
 
     // 10 tiles * 32 pixels + 9 borders
     const int width = 649;
@@ -54,7 +55,7 @@ int main() {
         window.clear(sf::Color::Black);
         window.setActive();
 
-        if (sim->Update(delta.asSeconds())) {
+        if (Time::Update() && sim->Update(delta.asSeconds())) {
             sim->Draw(window);
         }
         else {
