@@ -153,6 +153,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Observer.cpp" />
     <ClCompile Include="src\InputManager.cpp" />
     <ClCompile Include="src\Grid.cpp" />
     <ClCompile Include="src\Crow.cpp" />
@@ -166,9 +167,12 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)\include</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)\include</AdditionalIncludeDirectories>
     </ClCompile>
+    <ClCompile Include="src\Subject.cpp" />
     <ClCompile Include="src\Wolf.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Event.h" />
+    <ClInclude Include="src\Observer.h" />
     <ClInclude Include="src\InputManager.h" />
     <ClInclude Include="src\Grid.h" />
     <ClInclude Include="src\Crow.h" />
@@ -176,6 +180,7 @@
     <ClInclude Include="src\Grass.h" />
     <ClInclude Include="src\Agent.h" />
     <ClInclude Include="src\Simulation.h" />
+    <ClInclude Include="src\Subject.h" />
     <ClInclude Include="src\Wolf.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
