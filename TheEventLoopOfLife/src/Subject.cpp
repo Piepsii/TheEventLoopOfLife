@@ -15,5 +15,7 @@ void Subject::removeObserver(Observer* _observer)
 
 void Subject::notify(const Agent* _agent, Event _event)
 {
-
+	for (auto observer = observers.begin(); observer != observers.end(); ++observer) {
+		(*observer)->onNotify(*_agent, _event);
+	}
 }

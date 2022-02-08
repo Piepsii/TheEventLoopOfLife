@@ -2,9 +2,12 @@
 
 #pragma once
 
-#include "Agent.h"
 #include <SFML/Graphics.hpp>
 #include <random>
+
+#include "Agent.h"
+#include "Observer.h"
+#include "Subject.h"
 
 enum class GrassState {
     Seed,
@@ -12,8 +15,7 @@ enum class GrassState {
     Dirt
 };
 
-class Grass :
-    public Agent
+class Grass : public Agent, public Observer, public Subject
 {
 public:
     Grass();
@@ -30,6 +32,8 @@ public:
     void setHealth(float _health);
     int getRandomNeighborAsIndex();
 
+    void onNotify(const Agent& _agent, Event _event) override;
+
     int spreadChance = 1;
     GrassState state = GrassState::Dirt;
     float health = 0.0f;
@@ -39,7 +43,7 @@ private:
     sf::RectangleShape rect;
     sf::Color seed, mature, dirt;
     float growthFactor = 0.001f, witherFactor = 0.001f;
-    bool isTrampled;
+    bool wasTrampled = false;
     bool canGrow = true;
 
 };

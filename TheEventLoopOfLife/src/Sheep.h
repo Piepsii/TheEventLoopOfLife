@@ -5,6 +5,7 @@
 #include "Agent.h"
 #include "Grass.h"
 #include "Subject.h"
+#include "Observer.h"
 
 enum class SheepState {
     Evading,
@@ -15,7 +16,7 @@ enum class SheepState {
 };
 
 class Sheep :
-    public Agent
+    public Agent, public Observer, public Subject
 {
 public:
     Sheep();
@@ -26,8 +27,6 @@ public:
     void Act(std::vector<Grass>& _grassArray);
 
     void CalculateLineOfSight(std::vector<Grass>& _grassArray);
-
-    Subject Ate();
 
     void updateShape(float _tileSize);
     sf::CircleShape getBody();
@@ -53,8 +52,6 @@ private:
     Grass* grassBelow = nullptr;
     std::vector<Grass*> grassInFront = {};
     sf::Vector2i direction = sf::Vector2i(0, 0);
-
-    Subject ate;
 };
 
 static float lerp(float a, float b, float f)

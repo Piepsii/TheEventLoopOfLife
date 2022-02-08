@@ -12,6 +12,9 @@ Simulation::Simulation(unsigned int _screenWidth, unsigned int _screenHeight)
 Simulation::~Simulation()
 {
 	for (int i = 0; i < sheepArray.size(); i++) {
+		for (int j = 0; j < grassArray.size(); ++j) {
+			sheepArray[i]->removeObserver(&grassArray[j]);
+		}
 		delete sheepArray[i];
 		sheepArray[i] = nullptr;
 	}
@@ -28,8 +31,9 @@ bool Simulation::Update(float deltaTime)
 		grassArray[i].Act();
 		if (rand() % 100 < grassArray[i].spreadChance && grassArray[i].state == GrassState::Mature) {
 			int spreadTo = grassArray[i].getRandomNeighborAsIndex();
-			if(grassArray[spreadTo].state == GrassState::Dirt )
+			if (grassArray[spreadTo].state == GrassState::Dirt) { // move to grass
 				grassArray[spreadTo].setState(GrassState::Seed);
+			}
 		}
 	}
 
@@ -92,6 +96,9 @@ void Simulation::createGrid(unsigned int _columns, unsigned int _rows)
 			rand() % _columns,
 			rand() % _rows);
 		sheep->Create(tileSize);
+		for (int j = 0; j < grassArray.size(); ++j) {
+			sheep->addObserver(&grassArray[j]);
+		}
 		sheepArray.push_back(sheep);
 	}
 	sheepArray[0]->debug = true;

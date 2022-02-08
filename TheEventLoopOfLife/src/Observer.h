@@ -1,5 +1,6 @@
 #pragma once
-#include "Agent.h"
+
+class Agent;
 #include "Event.h"
 
 // sheep, grass, wolf etc

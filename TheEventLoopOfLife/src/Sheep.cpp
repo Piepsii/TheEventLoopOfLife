@@ -160,6 +160,7 @@ void Sheep::Wander()
 		} while (newPos.y < 0 || newPos.y > 9);
 	}
 	pos = newPos;
+	notify(this, Event::EVENT_TRAMPLE);
 }
 
 void Sheep::Age()

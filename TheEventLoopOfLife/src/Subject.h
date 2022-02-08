@@ -3,6 +3,8 @@
 #include <list>
 
 #include "Observer.h"
+#include "Event.h"
+#include "Agent.h"
 
 // Trample
 
@@ -12,7 +14,7 @@ public:
 	void removeObserver(Observer* _observer);
 
 protected:
-	void notify(const Agent* _agent, Event _event);
+	virtual void notify(const Agent* _agent, Event _event);
 
 private:
 	std::list<Observer*> observers = std::list<Observer*>();

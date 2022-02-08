@@ -22,10 +22,15 @@ void Grass::Sense()
 void Grass::Decide()
 {
 	if (health >= 1.0f)
-		state = GrassState::Mature;
+		setState(GrassState::Mature);
 
 	if (health <= 0.0f)
-		state = GrassState::Dirt;
+		setState(GrassState::Dirt);
+
+	if (wasTrampled) {
+		setState(GrassState::Dirt);
+		health = 0.0f;
+	}
 }
 
 void Grass::Act()
@@ -42,6 +47,7 @@ void Grass::Act()
 
 		break;
 	case GrassState::Dirt:
+		rect.setFillColor(dirt);
 		break;
 	}
 }
@@ -88,4 +94,14 @@ int Grass::getRandomNeighborAsIndex()
 
 	int index = neighborX * 10 + neighborY;
 	return index;
+}
+
+void Grass::onNotify(const Agent& _agent, Event _event) {
+	switch (_event) {
+	case Event::EVENT_TRAMPLE:
+		if (_agent.pos == pos && state != GrassState::Dirt) {
+			wasTrampled = true;
+		}
+		break;
+	}
 }
