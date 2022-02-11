@@ -62,7 +62,7 @@ void Sheep::decide()
 	//	return;
 	//}
 	if (nearestMatureGrass) {
-		state = SheepState::Wandering;
+		state = SheepState::Finding;
 	}
 
 	if (grassBeingGrazed) {
@@ -71,6 +71,7 @@ void Sheep::decide()
 		}
 		else {
 			state = SheepState::Wandering;
+			grassBeingGrazed = nullptr;
 		}
 	}
 }
@@ -168,6 +169,28 @@ void Sheep::breed()
 
 void Sheep::find()
 {
+	body.setFillColor(sf::Color::White);
+	switch (moveState) {
+	case MoveState::Search:
+		direction = sf::Vector2i(0, 0);
+		newPos = moveTowards(nearestMatureGrass->pos);
+		moveState = MoveState::Move;
+		break;
+
+	case MoveState::Move:
+		currentMoveTime += Time::deltaTime;
+		posf = lerpPositions(pos, newPos, currentMoveTime / moveTime);
+		if (currentMoveTime >= moveTime)
+			moveState = MoveState::Arrive;
+		break;
+
+	case MoveState::Arrive:
+		currentMoveTime = 0.0f;
+		pos = newPos;
+		notify(this, Event::TRAMPLE);
+		moveState = MoveState::Search;
+		break;
+	}
 }
 
 void Sheep::wander()
@@ -175,7 +198,6 @@ void Sheep::wander()
 	body.setFillColor(sf::Color::White);
 	switch(moveState){
 	case MoveState::Search:
-		newPos = pos;
 		direction = sf::Vector2i(0, 0);
 		newPos = randomAdjacentPos();
 		moveState = MoveState::Move;

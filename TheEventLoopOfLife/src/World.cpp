@@ -59,6 +59,7 @@ World::World(uint32_t _columns,
 		sheepArray.push_back(sheep);
 		sheep->addObserver(this);
 	}
+	sheepArray[0]->debug = true;
 }
 
 World::~World()
@@ -145,7 +146,7 @@ void World::onNotify(const Agent& _agent, Event _event)
 	switch (_event) {
 	case Event::DEATH:
 		for (int i = 0; i < sheepArray.size(); ++i) {
-			if (sheepArray[i]->pos == _agent.pos) {
+			if (sheepArray[i]->pos == _agent.pos) { // error: two sheep can have the same pos
 				toDeleteType = ToDeleteType::SHEEP;
 				toDeleteIndex = i;
 				break;

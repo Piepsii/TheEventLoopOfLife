@@ -24,11 +24,19 @@ void Agent::setPos(int _x, int _y)
 	pos.y = _y;
 }
 
-sf::Vector2f Agent::lerpPositions(sf::Vector2i _a, sf::Vector2i _b, float _t)
-{
-	sf::Vector2f result;
-	result.x = std::lerp((float)_a.x, (float)_b.x, _t);
-	result.y = std::lerp((float)_a.y, (float)_b.y, _t);
+sf::Vector2i Agent::moveTowards(sf::Vector2i _pos) {
+	sf::Vector2i result = pos;
+	sf::Vector2i path = _pos - pos;
+	int absX = std::abs(path.x);
+	int absY = std::abs(path.y);
+	if (absX > std::abs(path.y)) {
+		direction.x = absX != 0 ? path.x / absX : 0; 
+		result.x += direction.x;
+	}
+	else {
+		direction.y = absY != 0 ? path.y / absY : 0;
+		result.y += direction.y;
+	}
 	return result;
 }
 
@@ -48,5 +56,13 @@ sf::Vector2i Agent::randomAdjacentPos()
 			direction.y = moveY;
 		} while (result.y < 0 || result.y >= Grid::Instance()->Rows());
 	}
+	return result;
+}
+
+sf::Vector2f Agent::lerpPositions(sf::Vector2i _a, sf::Vector2i _b, float _t)
+{
+	sf::Vector2f result;
+	result.x = std::lerp((float)_a.x, (float)_b.x, _t);
+	result.y = std::lerp((float)_a.y, (float)_b.y, _t);
 	return result;
 }

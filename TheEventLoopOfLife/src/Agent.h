@@ -28,7 +28,7 @@ public:
 	MoveState moveState = MoveState::Search;
 
 protected:
-	void moveTowards(sf::Vector2i _pos);
+	sf::Vector2i moveTowards(sf::Vector2i _pos);
 	sf::Vector2i randomAdjacentPos();
 	sf::Vector2f lerpPositions(sf::Vector2i _a, sf::Vector2i _b, float _t);
 
