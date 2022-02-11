@@ -2,12 +2,17 @@
 
 #include "Simulation.h"
 
-Simulation::Simulation(uint32_t _screenWidth, uint32_t _screenHeight, uint32_t _columns, uint32_t _rows)
+Simulation::Simulation(uint32_t _screenWidth,
+					   uint32_t _screenHeight,
+					   uint32_t _columns,
+					   uint32_t _rows,
+					   uint32_t _borderWidth,
+					   uint32_t _tileSize)
 	: screenWidth(_screenWidth)
 	, screenHeight(_screenHeight)
 {
 	srand(time(0));
-	world = new World(_columns, _rows, _screenWidth);
+	world = new World(_columns, _rows, _screenWidth, _borderWidth, _tileSize);
 }
 
 Simulation::~Simulation()

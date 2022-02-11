@@ -50,6 +50,7 @@ private:
     float ageFactor = 0.1f;
     Grass* grassBelow;
     Grass* nearestMatureGrass;
+    Grass* grassBeingGrazed;
     SheepState state = SheepState::Wandering;
     sf::CircleShape body;
     sf::CircleShape head;

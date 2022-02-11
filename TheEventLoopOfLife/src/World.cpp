@@ -1,10 +1,14 @@
 #include "World.h"
 
-World::World(uint32_t _columns, uint32_t _rows, uint32_t _screenWidth)
+World::World(uint32_t _columns,
+			 uint32_t _rows,
+			 uint32_t _screenWidth,
+			 uint32_t _borderWidth,
+			 uint32_t _tileSize)
 {
-	tileSize = float(_screenWidth) / float(_columns);
+	tileSize = _tileSize;
 	grid = Grid::Instance();
-	grid->createGrid(_columns, _rows, 1, tileSize);
+	grid->createGrid(_columns, _rows, _borderWidth, _tileSize);
 
 	int tileAmount = _columns * _rows;
 
@@ -41,7 +45,7 @@ World::World(uint32_t _columns, uint32_t _rows, uint32_t _screenWidth)
 			grassArray[i]->addObserver(*neighbor);
 	}
 
-	for (int i = 0; i < tileAmount / 10; i++) {
+	for (int i = 0; i < tileAmount / 40; i++) {
 		Sheep* sheep = new Sheep();
 		float sheepSize = tileSize * 0.3f;
 		sheep->setSize(sheepSize);
@@ -55,7 +59,6 @@ World::World(uint32_t _columns, uint32_t _rows, uint32_t _screenWidth)
 		sheepArray.push_back(sheep);
 		sheep->addObserver(this);
 	}
-	sheepArray[0]->debug = true;
 }
 
 World::~World()

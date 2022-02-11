@@ -15,7 +15,11 @@ enum class ToDeleteType {
 class World : public Observer
 {
 public:
-	World(uint32_t _columns, uint32_t _rows, uint32_t _screenWidth);
+	World(uint32_t _columns,
+		  uint32_t _rows,
+		  uint32_t _screenWidth,
+		  uint32_t _borderWidth,
+		  uint32_t _tileSize);
 	~World();
 
 	void sense();

@@ -29,12 +29,19 @@ void Sheep::sense(std::vector<Grass*>& _grassArray)
 	// am i hungry?
 
 	grassInSight = findGrassInACone(_grassArray, senseRange);
-	grassInFront = findGrassInACone(_grassArray, eatRange);
 
 	for (auto grass = grassInSight.begin(); grass != grassInSight.end(); grass++) {
 		if ((*grass)->state == GrassState::Mature) {
 			nearestMatureGrass = (*grass);
 			break;
+		}
+	}
+
+	grassInFront = findGrassInACone(_grassArray, eatRange);
+
+	for (auto grass = grassInFront.begin(); grass != grassInFront.end(); grass++) {
+		if ((*grass)->state == GrassState::Mature) {
+			grassBeingGrazed = (*grass);
 		}
 	}
 }
@@ -55,7 +62,16 @@ void Sheep::decide()
 	//	return;
 	//}
 	if (nearestMatureGrass) {
-		state = SheepState::Finding;
+		state = SheepState::Wandering;
+	}
+
+	if (grassBeingGrazed) {
+		if (grassBeingGrazed->state == GrassState::Mature) {
+			state = SheepState::Eating;
+		}
+		else {
+			state = SheepState::Wandering;
+		}
 	}
 }
 
@@ -94,6 +110,8 @@ void Sheep::act(std::vector<Grass*>& _grassArray)
 		}
 		if(nearestMatureGrass)
 			nearestMatureGrass->debugColor = DebugColor::YELLOW;
+		if(grassBeingGrazed)
+			grassBeingGrazed->debugColor = DebugColor::YELLOW;
 	}
 }
 
@@ -139,8 +157,8 @@ sf::CircleShape Sheep::getHead()
 
 void Sheep::eat()
 {
-	body.setOutlineThickness(3.0f);
-	grassBelow->health -= hunger;
+	body.setFillColor(sf::Color::Red);
+	grassBeingGrazed->health -= hunger;
 	health += hunger;
 }
 
@@ -154,6 +172,7 @@ void Sheep::find()
 
 void Sheep::wander()
 {
+	body.setFillColor(sf::Color::White);
 	switch(moveState){
 	case MoveState::Search:
 		newPos = pos;

@@ -10,7 +10,12 @@
 class Simulation
 {
 public:
-	Simulation(uint32_t _screenWidth, uint32_t _screenHeight, uint32_t _columns, uint32_t _rows);
+	Simulation(uint32_t _screenWidth,
+			   uint32_t _screenHeight,
+			   uint32_t _columns,
+			   uint32_t _rows,
+			   uint32_t _borderWidth,
+			   uint32_t _tileSize);
 	~Simulation();
 
 	bool update(float deltaTime);

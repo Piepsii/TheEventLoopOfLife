@@ -8,14 +8,21 @@ int main() {
     const char* title = "The Event Loop of Life";
     InputManager input;
 
-    // 10 tiles * 32 pixels + 9 borders
-    const int width = 649;
-    const int height = 649;
+    const uint32_t columns = 20;
+    const uint32_t rows = 20;
+    const uint32_t borderWidth = 1;
+    const uint32_t tileSize = 64;
 
-    const unsigned int rows = 20;
-    const unsigned int columns = 20;
+    // 32 * columns + columns - 1
+    const uint32_t width = columns * tileSize + columns - 1;
+    const uint32_t height = rows * tileSize + rows - 1;
 
-    Simulation* sim = new Simulation(width, height, rows, columns);
+    Simulation* sim = new Simulation(width,
+                                     height,
+                                     columns,
+                                     rows,
+                                     borderWidth,
+                                     tileSize);
     sf::RenderWindow window(sf::VideoMode(width, height), title);
 
     sf::Clock clock;
