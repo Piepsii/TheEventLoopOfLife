@@ -6,7 +6,7 @@ public:
 	InputManager();
 
 	void setKey(sf::Keyboard::Key _key, bool _pressed);
-	void Update();
+	void update();
 	bool isKeyDown(sf::Keyboard::Key _key);
 	bool isKeyPressed(sf::Keyboard::Key _key);
 	bool isKeyReleased(sf::Keyboard::Key _key);

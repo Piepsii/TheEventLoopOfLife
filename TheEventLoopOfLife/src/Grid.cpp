@@ -12,7 +12,7 @@ Grid::~Grid()
 {
 }
 
-void Grid::Update()
+void Grid::update()
 {
 }
 

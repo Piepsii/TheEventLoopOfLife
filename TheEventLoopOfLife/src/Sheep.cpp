@@ -6,7 +6,7 @@ Sheep::Sheep()
 	state = SheepState::Wandering;
 }
 
-void Sheep::Create(float _tileSize)
+void Sheep::create(float _tileSize)
 {
 	body = sf::CircleShape();
 	body.setRadius(size);
@@ -25,16 +25,25 @@ void Sheep::Create(float _tileSize)
 	body.setOutlineThickness(1.0f);
 }
 
-void Sheep::Sense()
+void Sheep::sense(std::vector<Grass*>& _grassArray)
 {
-
 	// GATHER DATA
 	// is there a wolf nearby?
 	// can i reproduce?
 	// am i hungry?
+
+	grassInSight = findGrassInACone(_grassArray, senseRange);
+	grassInFront = findGrassInACone(_grassArray, eatRange);
+
+	for (auto grass = grassInSight.begin(); grass != grassInSight.end(); grass++) {
+		if ((*grass)->state == GrassState::Mature) {
+			nearestMatureGrass = (*grass);
+			break;
+		}
+	}
 }
 
-void Sheep::Decide()
+void Sheep::decide()
 {
 	// SET THE STATE MACHINE
 	// if standing on grass & hungry > Eating
@@ -49,14 +58,17 @@ void Sheep::Decide()
 	//	state = SheepState::Wandering;
 	//	return;
 	//}
+	if (nearestMatureGrass) {
+		state = SheepState::Finding;
+	}
 }
 
-void Sheep::Act(std::vector<Grass*>& _grassArray)
+void Sheep::act(std::vector<Grass*>& _grassArray)
 {
 	// SWITCH THE STATE MACHINE
-	Age();
+	age();
 	if (health <= 0.0f) {
-		Die();
+		die();
 	}
 
 	switch (state) {
@@ -64,37 +76,40 @@ void Sheep::Act(std::vector<Grass*>& _grassArray)
 		
 		break;
 	case SheepState::Eating:
-		Eat();
+		eat();
 		break;
 	case SheepState::Breeding:
-		Breed();
+		breed();
 		break;
 	case SheepState::Finding:
-		Find();
+		find();
 		break;
 	case SheepState::Wandering:
-		Wander();
+		wander();
 		break;
 	}
-
-	CalculateLineOfSight(_grassArray);
 	
 	if (debug) {
-		for (int i = 0; i < grassInFront.size(); i++) {
-			grassInFront[i]->marked = true;
+		for (int i = 0; i < grassInSight.size(); i++) {
+			grassInSight[i]->debugColor = DebugColor::RED;
 		}
+		for (int i = 0; i < grassInFront.size(); i++) {
+			grassInFront[i]->debugColor = DebugColor::BLUE;
+		}
+		if(nearestMatureGrass)
+			nearestMatureGrass->debugColor = DebugColor::YELLOW;
 	}
 }
 
-void Sheep::CalculateLineOfSight(std::vector<Grass*>& _grassArray)
+std::vector<Grass*> Sheep::findGrassInACone(std::vector<Grass*>& _grassArray, int _range)
 {
+	std::vector<Grass*> result;
 	int grassAmount = _grassArray.size();
 	int gridSize = sqrt(grassAmount);
 	int index = pos.x + pos.y * gridSize;
 	grassBelow = _grassArray[index];
-	grassInFront.clear();
 
-	for (int yOffset = 0, x = 1; x <= 1 + senseRange * 2; x += 2, yOffset--) {
+	for (int yOffset = 0, x = 1; x <= 1 + _range * 2; x += 2, yOffset--) {
 		for (int y = yOffset; y <= -yOffset; y++) {
 			sf::Vector2i grasPos = direction.y == 0
 				? sf::Vector2i(pos.x - yOffset * direction.x, pos.y + y)
@@ -102,9 +117,10 @@ void Sheep::CalculateLineOfSight(std::vector<Grass*>& _grassArray)
 			if (grasPos.x >= gridSize || grasPos.x < 0 || grasPos.y >= gridSize|| grasPos.y < 0)
 				continue;
 			int gridIndex = grasPos.x + grasPos.y * gridSize;
-			grassInFront.push_back(_grassArray[gridIndex]);
+			result.push_back(_grassArray[gridIndex]);
 		}
 	}
+	return result;
 }
 
 void Sheep::updateShape(float _tileSize)
@@ -125,48 +141,34 @@ sf::CircleShape Sheep::getHead()
 	return head;
 }
 
-void Sheep::Eat()
+void Sheep::eat()
 {
 	body.setOutlineThickness(3.0f);
 	grassBelow->health -= hunger;
 	health += hunger;
 }
 
-void Sheep::Breed()
+void Sheep::breed()
 {
 }
 
-void Sheep::Find()
+void Sheep::find()
 {
 }
 
-void Sheep::Wander()
+void Sheep::wander()
 {
 	switch(moveState){
 	case MoveState::Search:
-		//calculate new tile
 		newPos = pos;
 		direction = sf::Vector2i(0, 0);
-		int moveX;
-		do {
-			moveX = rand() % 3 - 1;
-			newPos.x += moveX;
-			direction.x = moveX;
-		} while (newPos.x < 0 || newPos.x > 9);
-		if (moveX == 0) {
-			do {
-				int moveY = rand() % 2 * 2 - 1;
-				newPos.y += moveY;
-				direction.y = moveY;
-			} while (newPos.y < 0 || newPos.y > 9);
-		}
+		newPos = randomAdjacentPos();
 		moveState = MoveState::Move;
 		break;
 
 	case MoveState::Move:
 		currentMoveTime += Time::deltaTime;
-		posf.x = std::lerp((float)pos.x, (float)newPos.x, currentMoveTime / moveTime);
-		posf.y = std::lerp((float)pos.y, (float)newPos.y, currentMoveTime / moveTime);
+		posf = lerpPositions(pos, newPos, currentMoveTime / moveTime);
 		if (currentMoveTime >= moveTime)
 			moveState = MoveState::Arrive;
 		break;
@@ -180,12 +182,12 @@ void Sheep::Wander()
 	}
 }
 
-void Sheep::Age()
+void Sheep::age()
 {
 	health -= 0.0001f;
 }
 
-void Sheep::Die()
+void Sheep::die()
 {
 	body.setFillColor(sf::Color::Red);
 }

@@ -13,10 +13,10 @@ public:
 	World(uint32_t _columns, uint32_t _rows, uint32_t _screenWidth);
 	~World();
 
-	void Sense();
-	void Decide();
-	void Act();
-	void Draw(sf::RenderWindow& _window);
+	void sense();
+	void decide();
+	void act();
+	void draw(sf::RenderWindow& _window);
 
 private:
 	std::vector<Grass*> getNeighboringGrasses(int index);

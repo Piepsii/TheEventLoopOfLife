@@ -10,7 +10,7 @@ public:
 	Grid(unsigned int _columns = 10, unsigned int _rows = 10, unsigned int _borderWidth = 1, unsigned int _tileSize = 64);
 	~Grid();
 
-	void Update();
+	void update();
 
 	unsigned int Columns();
 	unsigned int Rows();

@@ -7,7 +7,7 @@ Grass::Grass()
 	dirt = sf::Color(77, 38, 0, 255);
 }
 
-void Grass::Create()
+void Grass::create()
 {
 	rect = sf::RectangleShape(sf::Vector2f(size, size));
 	rect.setPosition((size + 1) * pos.x, (size + 1) * pos.y);
@@ -15,11 +15,11 @@ void Grass::Create()
 	rect.setOutlineThickness(1.0f);
 }
 
-void Grass::Sense()
+void Grass::sense()
 {
 }
 
-void Grass::Decide()
+void Grass::decide()
 {
 	if (health >= 1.0f)
 		setState(GrassState::Mature);
@@ -34,7 +34,7 @@ void Grass::Decide()
 	}
 }
 
-void Grass::Act()
+void Grass::act()
 {
 	switch (state) {
 	case GrassState::Seed:
@@ -54,17 +54,29 @@ void Grass::Act()
 	}
 }
 
-void Grass::DrawDebug()
+void Grass::drawDebug()
 {
-	if (marked) {
-		rect.setOutlineColor(sf::Color::Red);
-		rect.setOutlineThickness(2.0f);
-	}
-	else {
+	switch(debugColor){
+	case DebugColor::DEFAULT:
 		rect.setOutlineColor(sf::Color::Black);
 		rect.setOutlineThickness(0.0f);
+		break;
+	case DebugColor::RED:
+		rect.setOutlineColor(sf::Color::Red);
+		rect.setOutlineThickness(2.0f);
+		break;
+		
+	case DebugColor::BLUE:
+		rect.setOutlineColor(sf::Color::Blue);
+		rect.setOutlineThickness(2.0f);
+		break;
+	case DebugColor::YELLOW:
+		rect.setOutlineColor(sf::Color::Yellow);
+		rect.setOutlineThickness(2.0f);
+		break;
+		
 	}
-	marked = false;
+	debugColor = DebugColor::DEFAULT;
 }
 
 sf::RectangleShape Grass::getRect()

@@ -16,24 +16,18 @@ enum class SheepState {
     Wandering
 };
 
-enum class MoveState {
-    Search,
-    Move,
-    Arrive
-};
-
 class Sheep :
     public Agent, public Observer, public Subject
 {
 public:
     Sheep();
-    void Create(float _tileSize);
+    void create(float _tileSize);
 
-    void Sense();
-    void Decide();
-    void Act(std::vector<Grass*>& _grassArray);
+    void sense(std::vector<Grass*>& _grassArray);
+    void decide();
+    void act(std::vector<Grass*>& _grassArray);
 
-    void CalculateLineOfSight(std::vector<Grass*>& _grassArray);
+    std::vector<Grass*> findGrassInACone(std::vector<Grass*>& _grassArray, int _range);
 
     void updateShape(float _tileSize);
     sf::CircleShape getBody();
@@ -41,24 +35,24 @@ public:
 
     bool debug = false;
 private:
-    void Eat();
-    void Breed();
-    void Find();
-    void Wander();
-    void Age();
-    void Die();
+    void eat();
+    void breed();
+    void find();
+    void wander();
+    void age();
+    void die();
+    void moveTowards(sf::Vector2i _pos);
 
     int senseRange = 5;
     int eatRange = 1;
     float health = 1.0f;
-    float moveTime = 0.2f, currentMoveTime = 0.0f;
     float hunger = 0.01f;
     float headSize = 2.0f;
-    sf::CircleShape body, head;
+    Grass* grassBelow;
+    Grass* nearestMatureGrass;
     SheepState state = SheepState::Wandering;
-    MoveState moveState = MoveState::Search;
-    Grass* grassBelow = nullptr;
-    std::vector<Grass*> grassInFront = {};
-    sf::Vector2i direction;
-    sf::Vector2i newPos;
+    sf::CircleShape body;
+    sf::CircleShape head;
+    std::vector<Grass*> grassInSight;
+    std::vector<Grass*> grassInFront;
 };

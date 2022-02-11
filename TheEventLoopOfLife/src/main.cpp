@@ -54,8 +54,8 @@ int main() {
         window.clear(sf::Color::Black);
         window.setActive();
 
-        if (Time::Update() && sim->Update(delta.asSeconds())) {
-            sim->Draw(window);
+        if (Time::update() && sim->update(delta.asSeconds())) {
+            sim->draw(window);
         }
         else {
             running = false;

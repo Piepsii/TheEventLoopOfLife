@@ -21,16 +21,23 @@ enum class GridState {
     CENTRAL
 };
 
+enum class DebugColor {
+    DEFAULT,
+    RED,
+    BLUE,
+    YELLOW
+};
+
 class Grass : public Agent, public Observer, public Subject
 {
 public:
     Grass();
-    void Create();
-    void Sense();
-    void Decide();
-    void Act();
-    void DrawDebug();
+    void create();
+    void sense();
+    void decide();
+    void act();
 
+    void drawDebug();
     sf::RectangleShape getRect();
     void setState(GrassState _state);
     void setHealth(float _health);
@@ -41,7 +48,7 @@ public:
     GrassState state = GrassState::Dirt;
     GridState gridState = GridState::CENTRAL;
     float health = 0.0f;
-    bool marked = false;
+    DebugColor debugColor = DebugColor::DEFAULT;
 
 private:
     sf::RectangleShape rect;

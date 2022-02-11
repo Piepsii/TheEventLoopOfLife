@@ -14,7 +14,7 @@ void InputManager::setKey(sf::Keyboard::Key _key, bool _pressed)
 	keys[_key] = _pressed;
 }
 
-void InputManager::Update()
+void InputManager::update()
 {
 	for (int key = 0; key < sf::Keyboard::KeyCount; key++)
 		previousKeys[key] = keys[key];

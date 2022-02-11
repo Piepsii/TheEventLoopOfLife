@@ -13,10 +13,10 @@ World::World(uint32_t _columns, uint32_t _rows, uint32_t _screenWidth)
 		grass->setPos(
 			i % _columns,
 			floor(i / _rows));
-		grass->Create();
+		grass->create();
 		if (rand() % 100 < (int)grassSpawnChance) {
 			grass->setState(GrassState::Seed);
-			grass->setHealth(0.01f);
+			grass->setHealth(float(rand() / (RAND_MAX + 1.)));
 		}
 		if (i < grid.Columns()
 			|| i % grid.Columns() - 1 == 0
@@ -46,7 +46,7 @@ World::World(uint32_t _columns, uint32_t _rows, uint32_t _screenWidth)
 		sheep->setPos(
 			rand() % _columns,
 			rand() % _rows);
-		sheep->Create(tileSize);
+		sheep->create(tileSize);
 		for (int j = 0; j < grassArray.size(); ++j) {
 			sheep->addObserver(grassArray[j]);
 		}
@@ -70,43 +70,43 @@ World::~World()
 	}
 }
 
-void World::Sense()
+void World::sense()
 {
 	for (auto grass = grassArray.begin(); grass != grassArray.end(); ++grass) {
-		(*grass)->Sense();
+		(*grass)->sense();
 	}
 
 	for (auto sheep = sheepArray.begin(); sheep != sheepArray.end(); ++sheep) {
-		(*sheep)->Sense();
+		(*sheep)->sense(grassArray);
 	}
 }
 
-void World::Decide()
+void World::decide()
 {
 	for (auto grass = grassArray.begin(); grass != grassArray.end(); ++grass) {
-		(*grass)->Decide();
+		(*grass)->decide();
 	}
 
 	for (auto sheep = sheepArray.begin(); sheep != sheepArray.end(); ++sheep) {
-		(*sheep)->Decide();
+		(*sheep)->decide();
 	}
 }
 
-void World::Act()
+void World::act()
 {
 	for (auto grass = grassArray.begin(); grass != grassArray.end(); ++grass) {
-		(*grass)->Act();
+		(*grass)->act();
 	}
 
 	for (auto sheep = sheepArray.begin(); sheep != sheepArray.end(); ++sheep) {
-		(*sheep)->Act(grassArray);
+		(*sheep)->act(grassArray);
 	}
 }
 
-void World::Draw(sf::RenderWindow& _window)
+void World::draw(sf::RenderWindow& _window)
 {
 	for (auto grass = grassArray.begin(); grass != grassArray.end(); ++grass) {
-		(*grass)->DrawDebug();
+		(*grass)->drawDebug();
 		_window.draw((*grass)->getRect());
 	}
 

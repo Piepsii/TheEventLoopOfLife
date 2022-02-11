@@ -14,13 +14,13 @@ Simulation::~Simulation()
 {
 }
 
-bool Simulation::Update(float deltaTime)
+bool Simulation::update(float deltaTime)
 {
 	if (senseDecideCounter == 0) {
-		world->Sense();
-		world->Decide();
+		world->sense();
+		world->decide();
 	}
-	world->Act();
+	world->act();
 
 	senseDecideCounter++;
 	if (senseDecideCounter == senseDecideFrequency)
@@ -36,7 +36,7 @@ bool Simulation::Update(float deltaTime)
 	return true;
 }
 
-void Simulation::Draw(sf::RenderWindow& _window)
+void Simulation::draw(sf::RenderWindow& _window)
 {
-	world->Draw(_window);
+	world->draw(_window);
 }

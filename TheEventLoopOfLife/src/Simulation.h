@@ -13,8 +13,8 @@ public:
 	Simulation(uint32_t _screenWidth, uint32_t _screenHeight, uint32_t _columns, uint32_t _rows);
 	~Simulation();
 
-	bool Update(float deltaTime);
-	void Draw(sf::RenderWindow& _window);
+	bool update(float deltaTime);
+	void draw(sf::RenderWindow& _window);
 
 private:
 	World* world;

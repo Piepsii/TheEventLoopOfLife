@@ -6,7 +6,7 @@ float Time::timeScale = 1.0f;
 sf::Clock Time::simClock;
 sf::Clock Time::deltaClock;
 
-bool Time::Update()
+bool Time::update()
 {
 	time = simClock.getElapsedTime().asSeconds() * timeScale;
 	deltaTime = deltaClock.getElapsedTime().asSeconds();

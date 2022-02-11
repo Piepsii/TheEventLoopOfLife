@@ -4,7 +4,7 @@
 class Time
 {
 public:
-	static bool Update();
+	static bool update();
 
 	static float time, deltaTime;
 	static float timeScale;
