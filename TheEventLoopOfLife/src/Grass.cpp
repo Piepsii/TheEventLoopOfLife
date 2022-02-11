@@ -45,7 +45,7 @@ void Grass::act()
 	case GrassState::Mature:
 		health > 0.0f ? health -= witherFactor : health = health;
 		rect.setFillColor(LerpRGB(mature, dirt, (1.0f - health)));
-		notify(this, Event::EVENT_GROW);
+		notify(this, Event::GROW);
 
 		break;
 	case GrassState::Dirt:
@@ -112,12 +112,12 @@ int Grass::getRandomNeighborAsIndex()
 
 void Grass::onNotify(const Agent& _agent, Event _event) {
 	switch (_event) {
-	case Event::EVENT_TRAMPLE:
+	case Event::TRAMPLE:
 		if (_agent.pos == pos && state != GrassState::Dirt) {
 			wasTrampled = true;
 		}
 		break;
-	case Event::EVENT_GROW:
+	case Event::GROW:
 		if (rand() % 1000 < spreadChance) {
 			if (state == GrassState::Dirt) {
 				setState(GrassState::Seed);

@@ -12,15 +12,11 @@ void Sheep::create(float _tileSize)
 	body.setRadius(size);
 	body.setOutlineColor(sf::Color::Black);
 	body.setOrigin(size, size);
-	body.setPosition((_tileSize + 1) * pos.x + _tileSize / 2,
-					   (_tileSize + 1) * pos.y + _tileSize / 2);
 	body.setFillColor(sf::Color::White);
 
 	head = sf::CircleShape();
 	head.setRadius(size / headSize);
 	head.setOrigin(size / headSize, size / headSize);
-	head.setPosition((_tileSize + 1) * pos.x + _tileSize / 2,
-					 (_tileSize + 1) * pos.y + _tileSize / 2);
 	head.setFillColor(sf::Color::Black);
 	body.setOutlineThickness(1.0f);
 }
@@ -105,7 +101,7 @@ std::vector<Grass*> Sheep::findGrassInACone(std::vector<Grass*>& _grassArray, in
 {
 	std::vector<Grass*> result;
 	int grassAmount = _grassArray.size();
-	int gridSize = sqrt(grassAmount);
+	int gridSize = Grid::Instance()->Columns();
 	int index = pos.x + pos.y * gridSize;
 	grassBelow = _grassArray[index];
 
@@ -176,7 +172,7 @@ void Sheep::wander()
 	case MoveState::Arrive:
 		currentMoveTime = 0.0f;
 		pos = newPos;
-		notify(this, Event::EVENT_TRAMPLE);
+		notify(this, Event::TRAMPLE);
 		moveState = MoveState::Search;
 		break;
 	}
@@ -184,10 +180,10 @@ void Sheep::wander()
 
 void Sheep::age()
 {
-	health -= 0.0001f;
+	health -= ageFactor * Time::deltaTime;
 }
 
 void Sheep::die()
 {
-	body.setFillColor(sf::Color::Red);
+	notify(this, Event::DEATH);
 }

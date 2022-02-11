@@ -1,5 +1,8 @@
 #pragma once
+
 #include <SFML/Graphics.hpp>
+
+#include "Grid.h"
 
 enum class MoveState {
 	Search,

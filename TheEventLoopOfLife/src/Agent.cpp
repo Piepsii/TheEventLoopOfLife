@@ -40,13 +40,13 @@ sf::Vector2i Agent::randomAdjacentPos()
 		moveX = rand() % 3 - 1;
 		result.x += moveX;
 		direction.x = moveX;
-	} while (result.x < 0 || result.x > 9);
+	} while (result.x < 0 || result.x >= Grid::Instance()->Columns());
 	if (moveX == 0) {
 		do {
 			int moveY = rand() % 2 * 2 - 1;
 			result.y += moveY;
 			direction.y = moveY;
-		} while (result.y < 0 || result.y > 9);
+		} while (result.y < 0 || result.y >= Grid::Instance()->Rows());
 	}
 	return result;
 }

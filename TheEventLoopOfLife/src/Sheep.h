@@ -41,13 +41,13 @@ private:
     void wander();
     void age();
     void die();
-    void moveTowards(sf::Vector2i _pos);
 
     int senseRange = 5;
     int eatRange = 1;
     float health = 1.0f;
     float hunger = 0.01f;
     float headSize = 2.0f;
+    float ageFactor = 0.1f;
     Grass* grassBelow;
     Grass* nearestMatureGrass;
     SheepState state = SheepState::Wandering;

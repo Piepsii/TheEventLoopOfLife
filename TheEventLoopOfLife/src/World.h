@@ -7,7 +7,12 @@
 #include "Sheep.h"
 #include "Grid.h"
 
-class World
+enum class ToDeleteType {
+	GRASS,
+	SHEEP
+};
+
+class World : public Observer
 {
 public:
 	World(uint32_t _columns, uint32_t _rows, uint32_t _screenWidth);
@@ -17,15 +22,19 @@ public:
 	void decide();
 	void act();
 	void draw(sf::RenderWindow& _window);
+	void onNotify(const Agent& _agent, Event _event);
 
 private:
 	std::vector<Grass*> getNeighboringGrasses(int index);
 	Grass* getGrassAtPos(uint32_t x, uint32_t y);
 
-	Grid grid;
+	Grid* grid;
 	std::vector<Grass*> grassArray;
 	std::vector<Sheep*> sheepArray;
 	uint32_t grassSpawnChance = 30;
 	float tileSize = 1.0f;
+
+	ToDeleteType toDeleteType;
+	int toDeleteIndex;
 };
 

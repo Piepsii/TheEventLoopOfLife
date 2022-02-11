@@ -2,8 +2,9 @@
 
 enum class Event
 {
-	EVENT_TRAMPLE,
-	EVENT_GROW,
-	EVENT_EAT
+	TRAMPLE,
+	GROW,
+	EAT,
+	DEATH
 };
 

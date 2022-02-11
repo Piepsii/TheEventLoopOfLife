@@ -1,24 +1,34 @@
 #pragma once
 
 #include <vector>
-#include "Sheep.h"
-#include "Grass.h"
 
 class Grid
 {
 public:
-	Grid(unsigned int _columns = 10, unsigned int _rows = 10, unsigned int _borderWidth = 1, unsigned int _tileSize = 64);
-	~Grid();
-
+	static Grid* Instance();
+	void createGrid(uint32_t _columns = 10,
+		 uint32_t _rows = 10,
+		 uint32_t _borderWidth = 1,
+		 uint32_t _tileSize = 64);
 	void update();
+	uint32_t Columns();
+	uint32_t Rows();
+	uint32_t TileSize();
+	uint32_t Size();
 
-	unsigned int Columns();
-	unsigned int Rows();
-	unsigned int TileSize();
+	Grid(Grid& other) = delete;
+	void operator=(const Grid&) = delete;
+
+protected:
+	static Grid* instance;
 
 private:
-	unsigned int columns, rows;
-	unsigned int borderWidth;
-	unsigned int tileSize;
+	Grid();
+	~Grid();
+
+	uint32_t columns, rows;
+	uint32_t size;
+	uint32_t borderWidth;
+	uint32_t tileSize;
 };
 
