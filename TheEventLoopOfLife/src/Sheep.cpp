@@ -3,16 +3,8 @@
 
 Sheep::Sheep(sf::Vector2i _pos)
 {
-	state = SheepState::Wandering;
 	pos = _pos;
 	size = Grid::Instance()->TileSize() * 0.3f;
-	create();
-	
-}
-
-void Sheep::create()
-{
-	body = sf::CircleShape();
 	body.setRadius(size);
 	body.setOutlineColor(sf::Color::Black);
 	body.setOrigin(size, size);

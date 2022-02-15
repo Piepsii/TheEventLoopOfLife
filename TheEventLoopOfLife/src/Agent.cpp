@@ -4,6 +4,10 @@ void Agent::sense()
 {
 }
 
+void Agent::decide() 
+{
+}
+
 void Agent::act()
 {
 }

@@ -14,7 +14,7 @@ class Agent
 {
 public:
 	virtual void sense();
-	virtual void decide() = 0;
+	virtual void decide();
 	virtual void act();
 
 	void setSize(float _size);

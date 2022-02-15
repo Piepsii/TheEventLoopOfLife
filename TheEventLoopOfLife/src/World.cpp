@@ -56,20 +56,35 @@ World::World(uint32_t _columns,
 		sheep->addObserver(this);
 	}
 	sheepArray[0]->debug = true;
+
+	for (int i = 0; i < 5; i++) {
+		sf::Vector2i spawnPos = sf::Vector2i{
+			rand() % (int)_columns,
+			rand() % (int)_rows };
+		Wolf* wolf = new Wolf(spawnPos);
+		wolfArray.push_back(wolf);
+		wolf->addObserver(this);
+	}
 }
 
 World::~World()
 {
+	for (int i = 0; i < grassArray.size(); i++) {
+		grassArray[i]->removeAll();
+		delete grassArray[i];
+		grassArray[i] = nullptr;
+	}
+
 	for (int i = 0; i < sheepArray.size(); i++) {
 		sheepArray[i]->removeAll();
 		delete sheepArray[i];
 		sheepArray[i] = nullptr;
 	}
 
-	for (int i = 0; i < grassArray.size(); i++) {
-		grassArray[i]->removeAll();
-		delete grassArray[i];
-		grassArray[i] = nullptr;
+	for (int i = 0; i < wolfArray.size(); i++) {
+		wolfArray[i]->removeAll();
+		delete wolfArray[i];
+		wolfArray[i] = nullptr;
 	}
 }
 
@@ -82,6 +97,10 @@ void World::sense()
 	for (auto sheep = sheepArray.begin(); sheep != sheepArray.end(); ++sheep) {
 		(*sheep)->sense(grassArray);
 	}
+
+	for (auto wolf = wolfArray.begin(); wolf != wolfArray.end(); ++wolf) {
+		(*wolf)->sense();
+	}
 }
 
 void World::decide()
@@ -92,6 +111,10 @@ void World::decide()
 
 	for (auto sheep = sheepArray.begin(); sheep != sheepArray.end(); ++sheep) {
 		(*sheep)->decide();
+	}
+
+	for (auto wolf = wolfArray.begin(); wolf != wolfArray.end(); ++wolf) {
+		(*wolf)->decide();
 	}
 }
 
@@ -124,6 +147,10 @@ void World::act()
 	for (auto sheep = sheepArray.begin(); sheep != sheepArray.end(); sheep++) {
 		(*sheep)->act(grassArray);
 	}
+
+	for (auto wolf = wolfArray.begin(); wolf != wolfArray.end(); wolf++) {
+		(*wolf)->act();
+	}
 }
 
 void World::draw(sf::RenderWindow& _window)
@@ -135,6 +162,10 @@ void World::draw(sf::RenderWindow& _window)
 
 	for (auto sheep = sheepArray.begin(); sheep != sheepArray.end(); ++sheep) {
 		_window.draw((*sheep)->getBody());
+	}
+
+	for (auto wolf = wolfArray.begin(); wolf != wolfArray.end(); ++wolf) {
+		_window.draw((*wolf)->getBody());
 	}
 }
 

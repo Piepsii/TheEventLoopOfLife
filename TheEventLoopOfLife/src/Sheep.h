@@ -21,7 +21,6 @@ class Sheep :
 {
 public:
     Sheep(sf::Vector2i _pos);
-    void create();
 
     void sense(std::vector<Grass*>& _grassArray);
     void decide();
@@ -53,7 +52,7 @@ private:
     Grass* nearestMatureGrass;
     Grass* grassBeingGrazed;
     SheepState state = SheepState::Wandering;
-    sf::CircleShape body;
+    sf::CircleShape body = sf::CircleShape();
     std::vector<Grass*> grassInSight;
     std::vector<Grass*> grassInFront;
 };

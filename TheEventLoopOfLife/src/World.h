@@ -5,6 +5,7 @@
 
 #include "Grass.h"
 #include "Sheep.h"
+#include "Wolf.h"
 #include "Grid.h"
 
 enum class ToDeleteType {
@@ -35,6 +36,7 @@ private:
 	Grid* grid;
 	std::vector<Grass*> grassArray;
 	std::vector<Sheep*> sheepArray;
+	std::vector<Wolf*> wolfArray;
 	uint32_t grassSpawnChance = 30;
 	float tileSize = 1.0f;
 
