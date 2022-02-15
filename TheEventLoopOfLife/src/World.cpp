@@ -14,7 +14,6 @@ World::World(uint32_t _columns,
 
 	for (int i = 0; i < tileAmount; i++) {
 		Grass* grass = new Grass();
-		grass->setSize(tileSize);
 		grass->setPos(
 			i % _columns,
 			floor(i / _rows));
@@ -46,13 +45,10 @@ World::World(uint32_t _columns,
 	}
 
 	for (int i = 0; i < tileAmount / 40; i++) {
-		Sheep* sheep = new Sheep();
-		float sheepSize = tileSize * 0.3f;
-		sheep->setSize(sheepSize);
-		sheep->setPos(
-			rand() % _columns,
-			rand() % _rows);
-		sheep->create(tileSize);
+		sf::Vector2i spawnPos = sf::Vector2i{
+			rand() % (int)_columns,
+			rand() % (int)_rows };
+		Sheep* sheep = new Sheep(spawnPos);
 		for (int j = 0; j < grassArray.size(); ++j) {
 			sheep->addObserver(grassArray[j]);
 		}
@@ -118,11 +114,14 @@ void World::act()
 		toDeleteIndex = -1;
 	}
 
+	sheepArray.insert(sheepArray.end(), sheepToBreed.begin(), sheepToBreed.end());
+	sheepToBreed.clear();
+
 	for (auto grass = grassArray.begin(); grass != grassArray.end(); ++grass) {
 		(*grass)->act();
 	}
 
-	for (auto sheep = sheepArray.begin(); sheep != sheepArray.end(); ++sheep) {
+	for (auto sheep = sheepArray.begin(); sheep != sheepArray.end(); sheep++) {
 		(*sheep)->act(grassArray);
 	}
 }
@@ -135,9 +134,7 @@ void World::draw(sf::RenderWindow& _window)
 	}
 
 	for (auto sheep = sheepArray.begin(); sheep != sheepArray.end(); ++sheep) {
-		(*sheep)->updateShape(tileSize);
 		_window.draw((*sheep)->getBody());
-		_window.draw((*sheep)->getHead());
 	}
 }
 
@@ -152,6 +149,16 @@ void World::onNotify(const Agent& _agent, Event _event)
 				break;
 			}
 		}
+		break;
+	case Event::BREED:
+		sf::Vector2i spawnPos = grid->GetRandomNeighbor(_agent.pos);
+		Sheep* sheep = new Sheep(spawnPos);
+		for (int j = 0; j < grassArray.size(); ++j) {
+			sheep->addObserver(grassArray[j]);
+		}
+		sheepToBreed.push_back(sheep);
+		sheep->addObserver(this);
+		break;
 	}
 }
 

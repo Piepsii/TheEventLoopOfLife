@@ -32,7 +32,7 @@ protected:
 	sf::Vector2i randomAdjacentPos();
 	sf::Vector2f lerpPositions(sf::Vector2i _a, sf::Vector2i _b, float _t);
 
-	float size;
+	uint32_t size = Grid::Instance()->TileSize();
 	float moveTime = 0.2f;
 	float currentMoveTime = 0.0f;
 

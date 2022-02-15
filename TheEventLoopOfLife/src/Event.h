@@ -5,6 +5,7 @@ enum class Event
 	TRAMPLE,
 	GROW,
 	EAT,
-	DEATH
+	DEATH,
+	BREED
 };
 

@@ -20,8 +20,8 @@ class Sheep :
     public Agent, public Observer, public Subject
 {
 public:
-    Sheep();
-    void create(float _tileSize);
+    Sheep(sf::Vector2i _pos);
+    void create();
 
     void sense(std::vector<Grass*>& _grassArray);
     void decide();
@@ -31,7 +31,6 @@ public:
 
     void updateShape(float _tileSize);
     sf::CircleShape getBody();
-    sf::CircleShape getHead();
 
     bool debug = false;
 private:
@@ -42,18 +41,19 @@ private:
     void age();
     void die();
 
-    int senseRange = 5;
-    int eatRange = 1;
-    float health = 1.0f;
-    float hunger = 0.01f;
-    float headSize = 2.0f;
-    float ageFactor = 0.1f;
+    float health = 0.3f;
+    const int senseRange = 5;
+    const int eatRange = 1;
+    const float hunger = 0.001f;
+    const float headSize = 2.0f;
+    const float ageFactor = 0.001f;
+    const float breedThreshold = 0.9f;
+    const float breedCost = 0.5f;
     Grass* grassBelow;
     Grass* nearestMatureGrass;
     Grass* grassBeingGrazed;
     SheepState state = SheepState::Wandering;
     sf::CircleShape body;
-    sf::CircleShape head;
     std::vector<Grass*> grassInSight;
     std::vector<Grass*> grassInFront;
 };

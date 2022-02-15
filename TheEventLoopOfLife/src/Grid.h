@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <SFML/System.hpp>
 
 class Grid
 {
@@ -15,6 +16,8 @@ public:
 	uint32_t Rows();
 	uint32_t TileSize();
 	uint32_t Size();
+	sf::Vector2i GetRandomNeighbor(sf::Vector2i _pos);
+	uint32_t GetRandomNeighborAsIndex(sf::Vector2i _pos);
 
 	Grid(Grid& other) = delete;
 	void operator=(const Grid&) = delete;

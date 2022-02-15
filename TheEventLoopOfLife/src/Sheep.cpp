@@ -1,24 +1,22 @@
 #include "Sheep.h"
 #include "Time.h"
 
-Sheep::Sheep()
+Sheep::Sheep(sf::Vector2i _pos)
 {
 	state = SheepState::Wandering;
+	pos = _pos;
+	size = Grid::Instance()->TileSize() * 0.3f;
+	create();
+	
 }
 
-void Sheep::create(float _tileSize)
+void Sheep::create()
 {
 	body = sf::CircleShape();
 	body.setRadius(size);
 	body.setOutlineColor(sf::Color::Black);
 	body.setOrigin(size, size);
 	body.setFillColor(sf::Color::White);
-
-	head = sf::CircleShape();
-	head.setRadius(size / headSize);
-	head.setOrigin(size / headSize, size / headSize);
-	head.setFillColor(sf::Color::Black);
-	body.setOutlineThickness(1.0f);
 }
 
 void Sheep::sense(std::vector<Grass*>& _grassArray)
@@ -74,6 +72,10 @@ void Sheep::decide()
 			grassBeingGrazed = nullptr;
 		}
 	}
+
+	if (health > breedThreshold) {
+		state = SheepState::Breeding;
+	}
 }
 
 void Sheep::act(std::vector<Grass*>& _grassArray)
@@ -101,6 +103,8 @@ void Sheep::act(std::vector<Grass*>& _grassArray)
 		wander();
 		break;
 	}
+
+	updateShape(Grid::Instance()->TileSize());
 	
 	if (debug) {
 		for (int i = 0; i < grassInSight.size(); i++) {
@@ -142,18 +146,11 @@ void Sheep::updateShape(float _tileSize)
 {
 	body.setPosition((_tileSize + 1) * posf.x + _tileSize / 2,
 					   (_tileSize + 1) * posf.y + _tileSize / 2);
-	head.setPosition((_tileSize + 1) * posf.x + _tileSize / 2 + direction.x * size,
-					 (_tileSize + 1) * posf.y + _tileSize / 2 + direction.y * size);
 }
 
 sf::CircleShape Sheep::getBody()
 {
 	return body;
-}
-
-sf::CircleShape Sheep::getHead()
-{
-	return head;
 }
 
 void Sheep::eat()
@@ -165,6 +162,9 @@ void Sheep::eat()
 
 void Sheep::breed()
 {
+	health -= breedCost;
+	notify(this, Event::BREED);
+	state = SheepState::Wandering;
 }
 
 void Sheep::find()
