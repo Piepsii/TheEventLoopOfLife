@@ -4,7 +4,7 @@
 Sheep::Sheep(sf::Vector2i _pos)
 {
 	pos = _pos;
-	size = Grid::Instance()->TileSize() * 0.3f;
+	size = Grid::Instance()->TileSize() * 0.2f;
 	body.setRadius(size);
 	body.setOutlineColor(sf::Color::Black);
 	body.setOrigin(size, size);
@@ -51,6 +51,10 @@ void Sheep::decide()
 	//	state = SheepState::Wandering;
 	//	return;
 	//}
+	if (health > breedThreshold) {
+		state = SheepState::Breeding;
+	}
+
 	if (nearestMatureGrass) {
 		state = SheepState::Finding;
 	}
@@ -65,9 +69,6 @@ void Sheep::decide()
 		}
 	}
 
-	if (health > breedThreshold) {
-		state = SheepState::Breeding;
-	}
 }
 
 void Sheep::act(std::vector<Grass*>& _grassArray)
@@ -83,15 +84,19 @@ void Sheep::act(std::vector<Grass*>& _grassArray)
 		
 		break;
 	case SheepState::Eating:
+		body.setFillColor(sf::Color::Blue);
 		eat();
 		break;
 	case SheepState::Breeding:
+		body.setFillColor(sf::Color::Red);
 		breed();
 		break;
 	case SheepState::Finding:
+		body.setFillColor(sf::Color::Yellow);
 		find();
 		break;
 	case SheepState::Wandering:
+		body.setFillColor(sf::Color::White);
 		wander();
 		break;
 	}
@@ -147,16 +152,20 @@ sf::CircleShape Sheep::getBody()
 
 void Sheep::eat()
 {
-	body.setFillColor(sf::Color::Red);
+	grassBeingGrazed->debugColor = DebugColor::YELLOW;
 	grassBeingGrazed->health -= hunger;
 	health += hunger;
 }
 
 void Sheep::breed()
 {
-	health -= breedCost;
-	notify(this, Event::BREED);
-	state = SheepState::Wandering;
+	currentBreedTime += Time::deltaTime;
+	if (currentBreedTime > breedTime) {
+		health -= breedCost;
+		notify(this, Event::BREED);
+		state = SheepState::Wandering;
+		currentBreedTime = 0.0f;
+	}
 }
 
 void Sheep::find()
@@ -171,7 +180,7 @@ void Sheep::find()
 
 	case MoveState::Move:
 		currentMoveTime += Time::deltaTime;
-		posf = lerpPositions(pos, newPos, currentMoveTime / moveTime);
+		posf = lerpPositions(sf::Vector2f(pos.x, pos.y), sf::Vector2f(newPos.x, newPos.y), currentMoveTime / moveTime);
 		if (currentMoveTime >= moveTime)
 			moveState = MoveState::Arrive;
 		break;
@@ -197,7 +206,7 @@ void Sheep::wander()
 
 	case MoveState::Move:
 		currentMoveTime += Time::deltaTime;
-		posf = lerpPositions(pos, newPos, currentMoveTime / moveTime);
+		posf = lerpPositions(sf::Vector2f(pos.x, pos.y), sf::Vector2f(newPos.x, newPos.y), currentMoveTime / moveTime);
 		if (currentMoveTime >= moveTime)
 			moveState = MoveState::Arrive;
 		break;
@@ -213,7 +222,7 @@ void Sheep::wander()
 
 void Sheep::age()
 {
-	health -= ageFactor * Time::deltaTime;
+	health -= ageFactor;
 }
 
 void Sheep::die()

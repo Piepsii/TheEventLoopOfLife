@@ -2,7 +2,7 @@
 
 Grass::Grass()
 {
-	seed = sf::Color(221, 255, 153, 255);
+	seed = sf::Color(130, 50, 0, 255);
 	mature = sf::Color(38, 77, 0, 255);
 	dirt = sf::Color(77, 38, 0, 255);
 }
@@ -39,12 +39,12 @@ void Grass::act()
 	switch (state) {
 	case GrassState::Seed:
 		health < 1.0f ? health += growthFactor : health = health;
-		rect.setFillColor(LerpRGB(seed, mature, health));
+		rect.setFillColor(LerpRGB(seed, mature, std::clamp(health, 0.f, 1.f)));
 
 		break;
 	case GrassState::Mature:
 		health > 0.0f ? health -= witherFactor : health = health;
-		rect.setFillColor(LerpRGB(mature, dirt, (1.0f - health)));
+		rect.setFillColor(LerpRGB(mature, dirt, std::clamp(1.0f - health, 0.f, 1.f)));
 		notify(this, Event::GROW);
 
 		break;

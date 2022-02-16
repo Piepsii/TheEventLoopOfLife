@@ -34,6 +34,9 @@ private:
     void age();
     void die();
 
+    float health = 0.3f;
+    float ageFactor = 0.0f;
+    float moveTime = 0.4f;
     WolfState state = WolfState::Wandering;
     sf::CircleShape body = sf::CircleShape(0.0f, 3);
 };

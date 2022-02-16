@@ -8,14 +8,12 @@ int main() {
     const char* title = "The Event Loop of Life";
     InputManager input;
 
+    const uint32_t width = 1000;
+    const uint32_t height = 1000;
     const uint32_t columns = 20;
     const uint32_t rows = 20;
     const uint32_t borderWidth = 1;
-    const uint32_t tileSize = 64;
-
-    // 32 * columns + columns - 1
-    const uint32_t width = columns * tileSize + columns - 1;
-    const uint32_t height = rows * tileSize + rows - 1;
+    const uint32_t tileSize = width / columns;
 
     Simulation* sim = new Simulation(width,
                                      height,

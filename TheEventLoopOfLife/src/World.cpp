@@ -44,7 +44,7 @@ World::World(uint32_t _columns,
 			grassArray[i]->addObserver(*neighbor);
 	}
 
-	for (int i = 0; i < tileAmount / 40; i++) {
+	for (int i = 0; i < 10; i++) {
 		sf::Vector2i spawnPos = sf::Vector2i{
 			rand() % (int)_columns,
 			rand() % (int)_rows };
@@ -62,6 +62,9 @@ World::World(uint32_t _columns,
 			rand() % (int)_columns,
 			rand() % (int)_rows };
 		Wolf* wolf = new Wolf(spawnPos);
+		for (int j = 0; j < grassArray.size(); ++j) {
+			wolf->addObserver(grassArray[j]);
+		}
 		wolfArray.push_back(wolf);
 		wolf->addObserver(this);
 	}

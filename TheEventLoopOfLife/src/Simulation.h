@@ -25,5 +25,6 @@ private:
 	World* world;
 	uint32_t screenWidth, screenHeight;
 	uint32_t senseDecideFrequency = 10, senseDecideCounter = 0;
+	// todo: move to agents
 };
 

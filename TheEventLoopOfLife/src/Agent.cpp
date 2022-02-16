@@ -63,10 +63,10 @@ sf::Vector2i Agent::randomAdjacentPos()
 	return result;
 }
 
-sf::Vector2f Agent::lerpPositions(sf::Vector2i _a, sf::Vector2i _b, float _t)
+sf::Vector2f Agent::lerpPositions(sf::Vector2f _a, sf::Vector2f _b, float _t)
 {
 	sf::Vector2f result;
-	result.x = std::lerp((float)_a.x, (float)_b.x, _t);
-	result.y = std::lerp((float)_a.y, (float)_b.y, _t);
+	result.x = std::lerp(_a.x, _b.x, _t);
+	result.y = std::lerp(_a.y, _b.y, _t);
 	return result;
 }

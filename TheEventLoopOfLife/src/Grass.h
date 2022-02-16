@@ -4,6 +4,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <random>
+#include <algorithm>
 
 #include "Agent.h"
 #include "Observer.h"
@@ -53,7 +54,7 @@ public:
 private:
     sf::RectangleShape rect;
     sf::Color seed, mature, dirt;
-    float growthFactor = 0.001f, witherFactor = 0.001f;
+    float growthFactor = 0.01f, witherFactor = 0.001f;
     bool wasTrampled = false;
     bool canGrow = true;
 
@@ -62,11 +63,12 @@ private:
 // https://www.alanzucconi.com/2016/01/06/colour-interpolation/
 static sf::Color LerpRGB(sf::Color a, sf::Color b, float t)
 {
+    const uint8_t UINT8_MIN = 0;
     return sf::Color
     (
-        a.r + (b.r - a.r) * t,
-        a.g + (b.g - a.g) * t,
-        a.b + (b.b - a.b) * t,
-        a.a + (b.a - a.a) * t
+        std::clamp(sf::Uint8(a.r + (b.r - a.r) * t), UINT8_MIN, UINT8_MAX),
+        std::clamp(sf::Uint8(a.g + (b.g - a.g) * t), UINT8_MIN, UINT8_MAX),
+        std::clamp(sf::Uint8(a.b + (b.b - a.b) * t), UINT8_MIN, UINT8_MAX),
+        std::clamp(sf::Uint8(a.a + (b.a - a.a) * t), UINT8_MIN, UINT8_MAX)
     );
 }

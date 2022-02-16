@@ -41,6 +41,7 @@ private:
     void die();
 
     float health = 0.3f;
+    float currentBreedTime = 0.0f;
     const int senseRange = 5;
     const int eatRange = 1;
     const float hunger = 0.001f;
@@ -48,6 +49,7 @@ private:
     const float ageFactor = 0.001f;
     const float breedThreshold = 0.9f;
     const float breedCost = 0.5f;
+    const float breedTime = 0.5f;
     Grass* grassBelow;
     Grass* nearestMatureGrass;
     Grass* grassBeingGrazed;

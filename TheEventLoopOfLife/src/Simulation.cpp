@@ -31,13 +31,6 @@ bool Simulation::update(float deltaTime)
 	if (senseDecideCounter == senseDecideFrequency)
 		senseDecideCounter = 0;
 
-	//if (rand() % 100 < grassArray[i].spreadChance && grassArray[i].state == GrassState::Mature) {
-	//	int spreadTo = grassArray[i].getRandomNeighborAsIndex();
-	//	if (grassArray[spreadTo].state == GrassState::Dirt) { // move to grass
-	//		grassArray[spreadTo].setState(GrassState::Seed);
-	//	}
-	//}
-
 	return true;
 }
 
