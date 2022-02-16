@@ -9,11 +9,11 @@ int main() {
     InputManager input;
 
     const uint32_t width = 1000;
-    const uint32_t height = 1000;
+    const uint32_t height = width;
     const uint32_t columns = 20;
     const uint32_t rows = 20;
-    const uint32_t borderWidth = 1;
-    const uint32_t tileSize = width / columns;
+    const uint32_t borderWidth = 5;
+    const uint32_t tileSize = (width - columns) / columns;
 
     Simulation* sim = new Simulation(width,
                                      height,

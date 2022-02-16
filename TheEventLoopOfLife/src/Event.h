@@ -6,6 +6,7 @@ enum class Event
 	GROW,
 	EAT,
 	DEATH,
-	BREED
+	BREED_SHEEP,
+	BREED_WOLF
 };
 

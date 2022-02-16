@@ -44,7 +44,7 @@ World::World(uint32_t _columns,
 			grassArray[i]->addObserver(*neighbor);
 	}
 
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < 5; i++) {
 		sf::Vector2i spawnPos = sf::Vector2i{
 			rand() % (int)_columns,
 			rand() % (int)_rows };
@@ -55,7 +55,6 @@ World::World(uint32_t _columns,
 		sheepArray.push_back(sheep);
 		sheep->addObserver(this);
 	}
-	sheepArray[0]->debug = true;
 
 	for (int i = 0; i < 5; i++) {
 		sf::Vector2i spawnPos = sf::Vector2i{
@@ -143,6 +142,9 @@ void World::act()
 	sheepArray.insert(sheepArray.end(), sheepToBreed.begin(), sheepToBreed.end());
 	sheepToBreed.clear();
 
+	wolfArray.insert(wolfArray.end(), wolfToBreed.begin(), wolfToBreed.end());
+	wolfToBreed.clear();
+
 	for (auto grass = grassArray.begin(); grass != grassArray.end(); ++grass) {
 		(*grass)->act();
 	}
@@ -174,6 +176,7 @@ void World::draw(sf::RenderWindow& _window)
 
 void World::onNotify(const Agent& _agent, Event _event)
 {
+	sf::Vector2i spawnPos;
 	switch (_event) {
 	case Event::DEATH:
 		for (int i = 0; i < sheepArray.size(); ++i) {
@@ -184,14 +187,26 @@ void World::onNotify(const Agent& _agent, Event _event)
 			}
 		}
 		break;
-	case Event::BREED:
-		sf::Vector2i spawnPos = grid->GetRandomNeighbor(_agent.pos);
-		Sheep* sheep = new Sheep(spawnPos);
+
+	case Event::BREED_SHEEP:
+		spawnPos = grid->GetRandomNeighbor(_agent.pos);
+		Sheep* sheep;
+		sheep = new Sheep(spawnPos);
 		for (int j = 0; j < grassArray.size(); ++j) {
 			sheep->addObserver(grassArray[j]);
 		}
 		sheepToBreed.push_back(sheep);
 		sheep->addObserver(this);
+		break;
+
+	case Event::BREED_WOLF:
+		spawnPos = grid->GetRandomNeighbor(_agent.pos);
+		Wolf* wolf = new Wolf(spawnPos);
+		for (int j = 0; j < grassArray.size(); ++j) {
+			wolf->addObserver(grassArray[j]);
+		}
+		wolfToBreed.push_back(wolf);
+		wolf->addObserver(this);
 		break;
 	}
 }

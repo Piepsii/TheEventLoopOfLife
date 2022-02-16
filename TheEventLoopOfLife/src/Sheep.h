@@ -28,7 +28,6 @@ public:
 
     std::vector<Grass*> findGrassInACone(std::vector<Grass*>& _grassArray, int _range);
 
-    void updateShape(float _tileSize);
     sf::CircleShape getBody();
 
     bool debug = false;
@@ -40,16 +39,17 @@ private:
     void age();
     void die();
 
-    float health = 0.3f;
+    float health = 0.1f;
     float currentBreedTime = 0.0f;
     const int senseRange = 5;
     const int eatRange = 1;
-    const float hunger = 0.001f;
+    const float moveTime = 0.6f;
+    const float hunger = 0.003f;
     const float headSize = 2.0f;
     const float ageFactor = 0.001f;
     const float breedThreshold = 0.9f;
     const float breedCost = 0.5f;
-    const float breedTime = 0.5f;
+    const float breedTime = 1.5f;
     Grass* grassBelow;
     Grass* nearestMatureGrass;
     Grass* grassBeingGrazed;

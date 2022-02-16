@@ -21,7 +21,6 @@ void Wolf::decide()
 void Wolf::act()
 {
 	// SWITCH THE STATE MACHINE
-	age();
 	if (health <= 0.0f) {
 		die();
 	}
@@ -29,15 +28,18 @@ void Wolf::act()
 	switch (state) {
 	case WolfState::Eating:
 		eat();
+		age();
 		break;
 	case WolfState::Breeding:
 		breed();
 		break;
 	case WolfState::Pursuing:
 		pursue();
+		age();
 		break;
 	case WolfState::Wandering:
 		wander();
+		age();
 		break;
 	}
 
@@ -48,6 +50,7 @@ void Wolf::act()
 	auto tileSize = Grid::Instance()->TileSize();
 	body.setPosition((tileSize + 1) * posf.x + tileSize / 2,
 					 (tileSize + 1) * posf.y + tileSize / 2);
+	body.setScale(sf::Vector2f(health + 0.5f, health + 0.5f));
 }
 
 sf::CircleShape Wolf::getBody()
@@ -61,6 +64,13 @@ void Wolf::eat()
 
 void Wolf::breed()
 {
+	currentBreedTime += Time::deltaTime;
+	if (currentBreedTime > breedTime) {
+		health -= breedCost;
+		notify(this, Event::BREED_WOLF);
+		state = WolfState::Wandering;
+		currentBreedTime = 0.0f;
+	}
 }
 
 void Wolf::pursue()

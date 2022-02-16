@@ -53,11 +53,20 @@ void Sheep::decide()
 	//}
 	if (health > breedThreshold) {
 		state = SheepState::Breeding;
+		return;
 	}
 
 	if (nearestMatureGrass) {
+		if (nearestMatureGrass->state != GrassState::Mature) {
+			nearestMatureGrass = nullptr;
+			state = SheepState::Wandering;
+		}
 		state = SheepState::Finding;
 	}
+	else {
+		state = SheepState::Wandering;
+	}
+
 
 	if (grassBeingGrazed) {
 		if (grassBeingGrazed->state == GrassState::Mature) {
@@ -74,7 +83,7 @@ void Sheep::decide()
 void Sheep::act(std::vector<Grass*>& _grassArray)
 {
 	// SWITCH THE STATE MACHINE
-	age();
+
 	if (health <= 0.0f) {
 		die();
 	}
@@ -86,6 +95,7 @@ void Sheep::act(std::vector<Grass*>& _grassArray)
 	case SheepState::Eating:
 		body.setFillColor(sf::Color::Blue);
 		eat();
+		age();
 		break;
 	case SheepState::Breeding:
 		body.setFillColor(sf::Color::Red);
@@ -94,15 +104,20 @@ void Sheep::act(std::vector<Grass*>& _grassArray)
 	case SheepState::Finding:
 		body.setFillColor(sf::Color::Yellow);
 		find();
+		age();
 		break;
 	case SheepState::Wandering:
 		body.setFillColor(sf::Color::White);
 		wander();
+		age();
 		break;
 	}
 
-	updateShape(Grid::Instance()->TileSize());
-	
+	float tileSize = Grid::Instance()->TileSize();
+	body.setPosition((tileSize + 1) * posf.x + tileSize / 2,
+					 (tileSize + 1) * posf.y + tileSize / 2);
+	body.setScale(sf::Vector2f(health + 0.5f, health + 0.5f));
+
 	if (debug) {
 		for (int i = 0; i < grassInSight.size(); i++) {
 			grassInSight[i]->debugColor = DebugColor::RED;
@@ -139,12 +154,6 @@ std::vector<Grass*> Sheep::findGrassInACone(std::vector<Grass*>& _grassArray, in
 	return result;
 }
 
-void Sheep::updateShape(float _tileSize)
-{
-	body.setPosition((_tileSize + 1) * posf.x + _tileSize / 2,
-					   (_tileSize + 1) * posf.y + _tileSize / 2);
-}
-
 sf::CircleShape Sheep::getBody()
 {
 	return body;
@@ -152,7 +161,7 @@ sf::CircleShape Sheep::getBody()
 
 void Sheep::eat()
 {
-	grassBeingGrazed->debugColor = DebugColor::YELLOW;
+	grassBeingGrazed->debugColor = DebugColor::BLUE;
 	grassBeingGrazed->health -= hunger;
 	health += hunger;
 }
@@ -162,7 +171,7 @@ void Sheep::breed()
 	currentBreedTime += Time::deltaTime;
 	if (currentBreedTime > breedTime) {
 		health -= breedCost;
-		notify(this, Event::BREED);
+		notify(this, Event::BREED_SHEEP);
 		state = SheepState::Wandering;
 		currentBreedTime = 0.0f;
 	}
@@ -170,11 +179,17 @@ void Sheep::breed()
 
 void Sheep::find()
 {
-	body.setFillColor(sf::Color::White);
+	if(nearestMatureGrass)
+		nearestMatureGrass->debugColor = DebugColor::YELLOW;
 	switch (moveState) {
 	case MoveState::Search:
 		direction = sf::Vector2i(0, 0);
-		newPos = moveTowards(nearestMatureGrass->pos);
+		if (nearestMatureGrass) {
+			newPos = moveTowards(nearestMatureGrass->pos);
+		}
+		else {
+			newPos = pos;
+		}
 		moveState = MoveState::Move;
 		break;
 
@@ -196,7 +211,6 @@ void Sheep::find()
 
 void Sheep::wander()
 {
-	body.setFillColor(sf::Color::White);
 	switch(moveState){
 	case MoveState::Search:
 		direction = sf::Vector2i(0, 0);

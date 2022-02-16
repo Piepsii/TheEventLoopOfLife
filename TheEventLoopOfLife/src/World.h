@@ -43,5 +43,6 @@ private:
 	ToDeleteType toDeleteType;
 	int toDeleteIndex;
 	std::vector<Sheep*> sheepToBreed;
+	std::vector<Wolf*> wolfToBreed;
 };
 
