@@ -21,16 +21,16 @@ class Sheep :
 {
 public:
     Sheep(sf::Vector2i _pos);
-
     void sense(std::vector<Grass*>& _grassArray);
     void decide();
     void act(std::vector<Grass*>& _grassArray);
-
-    std::vector<Grass*> findGrassInACone(std::vector<Grass*>& _grassArray, int _range);
-
     sf::CircleShape getBody();
+    void markAsSeen();
+    void markAsTarget();
 
+    float health = 0.1f;
     bool debug = false;
+
 private:
     void eat();
     void breed();
@@ -38,8 +38,10 @@ private:
     void wander();
     void age();
     void die();
+    std::vector<Grass*> findGrassInACone(std::vector<Grass*>& _grassArray, int _range);
 
-    float health = 0.1f;
+    bool seen = false;
+    bool target = false;
     float currentBreedTime = 0.0f;
     const int senseRange = 5;
     const int eatRange = 1;
@@ -53,8 +55,8 @@ private:
     Grass* grassBelow;
     Grass* nearestMatureGrass;
     Grass* grassBeingGrazed;
-    SheepState state = SheepState::Wandering;
-    sf::CircleShape body = sf::CircleShape();
     std::vector<Grass*> grassInSight;
     std::vector<Grass*> grassInFront;
+    SheepState state = SheepState::Wandering;
+    sf::CircleShape body = sf::CircleShape();
 };

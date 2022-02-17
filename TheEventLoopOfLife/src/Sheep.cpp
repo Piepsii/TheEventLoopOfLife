@@ -123,6 +123,18 @@ void Sheep::act(std::vector<Grass*>& _grassArray)
 					 (tileSize + 1) * posf.y + tileSize / 2);
 	body.setScale(sf::Vector2f(health + 0.5f, health + 0.5f));
 
+	body.setOutlineThickness(1.0f);
+	if (seen) {
+		body.setOutlineThickness(5.0f);
+		seen = false;
+	}
+
+	body.setOutlineColor(sf::Color::Black);
+	if (target) {
+		body.setOutlineColor(sf::Color::Cyan);
+		target = false;
+	}
+
 	if (debug) {
 		for (int i = 0; i < grassInSight.size(); i++) {
 			grassInSight[i]->debugColor = DebugColor::RED;
@@ -162,6 +174,16 @@ std::vector<Grass*> Sheep::findGrassInACone(std::vector<Grass*>& _grassArray, in
 sf::CircleShape Sheep::getBody()
 {
 	return body;
+}
+
+void Sheep::markAsSeen()
+{
+	seen = true;
+}
+
+void Sheep::markAsTarget()
+{
+	target = true;
 }
 
 void Sheep::eat()
