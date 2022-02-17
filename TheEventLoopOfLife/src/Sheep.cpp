@@ -9,6 +9,11 @@ Sheep::Sheep(sf::Vector2i _pos)
 	body.setOutlineColor(sf::Color::Black);
 	body.setOrigin(size, size);
 	body.setFillColor(sf::Color::White);
+
+	float tileSize = Grid::Instance()->TileSize();
+	body.setPosition((tileSize + 1) * posf.x + tileSize / 2,
+					 (tileSize + 1) * posf.y + tileSize / 2);
+	body.setScale(sf::Vector2f(health + 0.5f, health + 0.5f));
 }
 
 void Sheep::sense(std::vector<Grass*>& _grassArray)

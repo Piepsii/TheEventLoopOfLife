@@ -44,7 +44,7 @@ World::World(uint32_t _columns,
 			grassArray[i]->addObserver(*neighbor);
 	}
 
-	for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < 1; i++) {
 		sf::Vector2i spawnPos = sf::Vector2i{
 			rand() % (int)_columns,
 			rand() % (int)_rows };
