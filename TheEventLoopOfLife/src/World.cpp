@@ -44,7 +44,7 @@ World::World(uint32_t _columns,
 			grassArray[i]->addObserver(*neighbor);
 	}
 
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < sheepAmount; i++) {
 		sf::Vector2i spawnPos = sf::Vector2i{
 			rand() % (int)_columns,
 			rand() % (int)_rows };
@@ -56,7 +56,7 @@ World::World(uint32_t _columns,
 		sheep->addObserver(this);
 	}
 
-	for (int i = 0; i < 1; i++) {
+	for (int i = 0; i < wolfAmount; i++) {
 		sf::Vector2i spawnPos = sf::Vector2i{
 			rand() % (int)_columns,
 			rand() % (int)_rows };
@@ -66,6 +66,15 @@ World::World(uint32_t _columns,
 		}
 		wolfArray.push_back(wolf);
 		wolf->addObserver(this);
+	}
+
+	for (int i = 0; i < crowAmount; i++) {
+		sf::Vector2i spawnPos = sf::Vector2i{
+			rand() % (int)_columns,
+			rand() % (int)_rows };
+		Crow* crow = new Crow(spawnPos);
+		crowArray.push_back(crow);
+		crow->addObserver(this);
 	}
 }
 
@@ -87,6 +96,12 @@ World::~World()
 		wolfArray[i]->removeAll();
 		delete wolfArray[i];
 		wolfArray[i] = nullptr;
+	}
+
+	for (int i = 0; i < crowArray.size(); i++) {
+		crowArray[i]->removeAll();
+		delete crowArray[i];
+		crowArray[i] = nullptr;
 	}
 }
 
@@ -156,6 +171,10 @@ void World::act()
 	for (auto wolf = wolfArray.begin(); wolf != wolfArray.end(); wolf++) {
 		(*wolf)->act();
 	}
+
+	for (auto crow = crowArray.begin(); crow != crowArray.end(); crow++) {
+		(*crow)->update(crowArray);
+	}
 }
 
 void World::draw(sf::RenderWindow& _window)
@@ -171,6 +190,11 @@ void World::draw(sf::RenderWindow& _window)
 
 	for (auto wolf = wolfArray.begin(); wolf != wolfArray.end(); ++wolf) {
 		_window.draw((*wolf)->getBody());
+	}
+
+	for (auto crow = crowArray.begin(); crow != crowArray.end(); ++crow) {
+		_window.draw((*crow)->getBody());
+		_window.draw((*crow)->getShadow());
 	}
 }
 

@@ -27,7 +27,7 @@ public:
 
     sf::CircleShape getBody();
 
-    bool debug = true;
+    bool debug = false;
 
 private:
     void eat();

@@ -189,7 +189,6 @@ void Wolf::die()
 std::vector<Sheep*> Wolf::findSheepInACone(std::vector<Sheep*>& _sheepArray, int _range)
 {
 	std::vector<Sheep*> result;
-	int gridWidth = Grid::Instance()->Columns();
 	for (auto sheep = _sheepArray.begin(); sheep != _sheepArray.end(); sheep++) {
 		auto sheepPos = (*sheep)->pos;
 		sf::Vector2i distanceVec = sheepPos - pos;

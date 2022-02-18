@@ -188,7 +188,8 @@ void Sheep::markAsTarget()
 
 void Sheep::eat()
 {
-	grassBeingGrazed->debugColor = DebugColor::BLUE;
+	if(debug)
+		grassBeingGrazed->debugColor = DebugColor::BLUE;
 	grassBeingGrazed->health -= hunger;
 	health += hunger;
 }
@@ -206,7 +207,7 @@ void Sheep::breed()
 
 void Sheep::find()
 {
-	if(nearestMatureGrass)
+	if(nearestMatureGrass && debug)
 		nearestMatureGrass->debugColor = DebugColor::YELLOW;
 	switch (moveState) {
 	case MoveState::Search:

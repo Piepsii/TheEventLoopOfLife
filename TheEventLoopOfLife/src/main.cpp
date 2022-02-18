@@ -10,10 +10,10 @@ int main() {
 
     const uint32_t width = 1000;
     const uint32_t height = width;
-    const uint32_t columns = 40;
-    const uint32_t rows = 40;
-    const uint32_t borderWidth = 5;
-    const uint32_t tileSize = (width - columns) / columns;
+    const uint32_t columns = 30;
+    const uint32_t rows = 30;
+    const uint32_t borderWidth = 1;
+    const uint32_t tileSize = width / columns;
 
     Simulation* sim = new Simulation(width,
                                      height,
