@@ -16,7 +16,7 @@ Sheep::Sheep(sf::Vector2i _pos)
 	body.setScale(sf::Vector2f(health + 0.5f, health + 0.5f));
 }
 
-void Sheep::sense(std::vector<Grass*>& _grassArray)
+void Sheep::sense(std::vector<Grass*>& _grassArray, std::vector<Wolf*>& _wolfArray)
 {
 	// GATHER DATA
 	// is there a wolf nearby?
@@ -37,6 +37,14 @@ void Sheep::sense(std::vector<Grass*>& _grassArray)
 	for (auto grass = grassInFront.begin(); grass != grassInFront.end(); grass++) {
 		if ((*grass)->state == GrassState::Mature) {
 			grassBeingGrazed = (*grass);
+		}
+	}
+
+	sensedWolves.clear();
+	for (auto wolf = _wolfArray.begin(); wolf != _wolfArray.end(); wolf++) {
+		sf::Vector2i distance = (*wolf)->pos - pos;
+		if (magnitude(distance) < evadeRange) {
+			sensedWolves.push_back(*wolf);
 		}
 	}
 }
@@ -85,7 +93,7 @@ void Sheep::decide()
 
 }
 
-void Sheep::act(std::vector<Grass*>& _grassArray)
+void Sheep::act()
 {
 	// SWITCH THE STATE MACHINE
 
@@ -95,7 +103,8 @@ void Sheep::act(std::vector<Grass*>& _grassArray)
 
 	switch (state) {
 	case SheepState::Evading:
-		
+		evade();
+		age();
 		break;
 	case SheepState::Eating:
 		body.setFillColor(sf::Color::Blue);
@@ -171,6 +180,46 @@ std::vector<Grass*> Sheep::findGrassInACone(std::vector<Grass*>& _grassArray, in
 	return result;
 }
 
+sf::Vector2i Sheep::calcEvadeDirection(std::vector<Wolf*>& _wolfArray, int _range)
+{
+	// 0 = North, 1 = East, 2 = South, 3 = West
+	int threatLevel[4] = { 0, 0, 0, 0 };
+	for (auto wolf = _wolfArray.begin(); wolf != _wolfArray.end(); wolf++) {
+		sf::Vector2i vec = (*wolf)->pos - pos;
+		if (vec.y < 0.f && vec.x < vec.y && vec.x > -vec.y) {
+			threatLevel[0]++;
+		}
+		else if (vec.x > 0.f && vec.y < vec.x && vec.y > -vec.x) {
+			threatLevel[1]++;
+		}
+		else if (vec.y > 0.f && vec.x < vec.y && vec.x > -vec.y) {
+			threatLevel[2]++;
+		}
+		else if (vec.x < 0.f && vec.y < vec.x && vec.y > -vec.x) {
+			threatLevel[3]++;
+		}
+	}
+
+	int index = -1, highest = 0;
+	for (int i = 0; i < 4; i++) {
+		if (threatLevel[i] > highest) {
+			highest = threatLevel[i];
+			index = i;
+		}
+	}
+
+	if (index = 0) {
+		return sf::Vector2i{ 0, 1 };
+	} else if (index = 1) {
+		return sf::Vector2i{ -1, 0 };
+	} else if (index = 2) {
+		return sf::Vector2i{ 0, -1 };
+	} else if (index = 3) {
+		return sf::Vector2i{ 1, 0 };
+	}
+	return sf::Vector2i{ 0, 0 };
+}
+
 sf::CircleShape Sheep::getBody()
 {
 	return body;
@@ -184,6 +233,30 @@ void Sheep::markAsSeen()
 void Sheep::markAsTarget()
 {
 	target = true;
+}
+
+void Sheep::evade() {
+	switch (moveState) {
+	case MoveState::Search:
+		direction = sf::Vector2i(0, 0);
+		newPos += calcEvadeDirection(sensedWolves, evadeRange);
+		moveState = MoveState::Move;
+		break;
+
+	case MoveState::Move:
+		currentMoveTime += Time::deltaTime;
+		posf = lerpPositions(sf::Vector2f(pos.x, pos.y), sf::Vector2f(newPos.x, newPos.y), currentMoveTime / moveTime);
+		if (currentMoveTime >= moveTime)
+			moveState = MoveState::Arrive;
+		break;
+
+	case MoveState::Arrive:
+		currentMoveTime = 0.0f;
+		pos = newPos;
+		notify(this, Event::TRAMPLE);
+		moveState = MoveState::Search;
+		break;
+	}
 }
 
 void Sheep::eat()

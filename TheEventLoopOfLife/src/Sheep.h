@@ -7,6 +7,7 @@
 #include "Grass.h"
 #include "Subject.h"
 #include "Observer.h"
+#include "Wolf.h"
 
 enum class SheepState {
     Evading,
@@ -21,9 +22,9 @@ class Sheep :
 {
 public:
     Sheep(sf::Vector2i _pos);
-    void sense(std::vector<Grass*>& _grassArray);
+    void sense(std::vector<Grass*>& _grassArray, std::vector<Wolf*>& _wolfArray);
     void decide();
-    void act(std::vector<Grass*>& _grassArray);
+    void act();
     sf::CircleShape getBody();
     void markAsSeen();
     void markAsTarget();
@@ -32,6 +33,7 @@ public:
     bool debug = false;
 
 private:
+    void evade();
     void eat();
     void breed();
     void find();
@@ -39,12 +41,14 @@ private:
     void age();
     void die();
     std::vector<Grass*> findGrassInACone(std::vector<Grass*>& _grassArray, int _range);
+    sf::Vector2i calcEvadeDirection(std::vector<Wolf*>& _wolfArray, int _range);
 
     bool seen = false;
     bool target = false;
     float currentBreedTime = 0.0f;
     const int senseRange = 5;
     const int eatRange = 1;
+    const int evadeRange = 3;
     const float moveTime = 0.6f;
     const float hunger = 0.003f;
     const float headSize = 2.0f;
@@ -57,6 +61,9 @@ private:
     Grass* grassBeingGrazed;
     std::vector<Grass*> grassInSight;
     std::vector<Grass*> grassInFront;
+    std::vector<Wolf*> sensedWolves;
     SheepState state = SheepState::Wandering;
     sf::CircleShape body = sf::CircleShape();
+
+    float magnitude(sf::Vector2i v) { return sqrt(v.x * v.x + v.y * v.y); }
 };

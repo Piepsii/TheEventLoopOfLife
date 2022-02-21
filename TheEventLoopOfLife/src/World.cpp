@@ -112,7 +112,7 @@ void World::sense()
 	}
 
 	for (auto sheep = sheepArray.begin(); sheep != sheepArray.end(); ++sheep) {
-		(*sheep)->sense(grassArray);
+		(*sheep)->sense(grassArray, wolfArray);
 	}
 
 	for (auto wolf = wolfArray.begin(); wolf != wolfArray.end(); ++wolf) {
@@ -165,7 +165,7 @@ void World::act()
 	}
 
 	for (auto sheep = sheepArray.begin(); sheep != sheepArray.end(); sheep++) {
-		(*sheep)->act(grassArray);
+		(*sheep)->act();
 	}
 
 	for (auto wolf = wolfArray.begin(); wolf != wolfArray.end(); wolf++) {
