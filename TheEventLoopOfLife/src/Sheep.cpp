@@ -16,13 +16,8 @@ Sheep::Sheep(sf::Vector2i _pos)
 	body.setScale(sf::Vector2f(health + 0.5f, health + 0.5f));
 }
 
-void Sheep::sense(std::vector<Grass*>& _grassArray, std::vector<Wolf*>& _wolfArray)
+void Sheep::sense(std::vector<Grass*>& _grassArray, std::vector<sf::Vector2i*>& _wolfArray)
 {
-	// GATHER DATA
-	// is there a wolf nearby?
-	// can i reproduce?
-	// am i hungry?
-
 	grassInSight = findGrassInACone(_grassArray, senseRange);
 
 	for (auto grass = grassInSight.begin(); grass != grassInSight.end(); grass++) {
@@ -42,7 +37,7 @@ void Sheep::sense(std::vector<Grass*>& _grassArray, std::vector<Wolf*>& _wolfArr
 
 	sensedWolves.clear();
 	for (auto wolf = _wolfArray.begin(); wolf != _wolfArray.end(); wolf++) {
-		sf::Vector2i distance = (*wolf)->pos - pos;
+		sf::Vector2i distance = (**wolf) - pos;
 		if (magnitude(distance) < evadeRange) {
 			sensedWolves.push_back(*wolf);
 		}
@@ -51,19 +46,11 @@ void Sheep::sense(std::vector<Grass*>& _grassArray, std::vector<Wolf*>& _wolfArr
 
 void Sheep::decide()
 {
-	// SET THE STATE MACHINE
-	// if standing on grass & hungry > Eating
-	//if (grassBelow->state == GrassState::Mature) {
-	//	state = SheepState::Eating;
-	//	return;
-	//}
-	//// if able to reproduce > breeding
-	//// if hungry & near grass > finding
-	//// if not near grass > wandering
-	//if (grassBelow->state != GrassState::Mature) {
-	//	state = SheepState::Wandering;
-	//	return;
-	//}
+	if (sensedWolves.size() > 0) {
+		state = SheepState::Evading;
+		return;
+	}
+
 	if (health > breedThreshold) {
 		state = SheepState::Breeding;
 		return;
@@ -103,6 +90,7 @@ void Sheep::act()
 
 	switch (state) {
 	case SheepState::Evading:
+		body.setFillColor(sf::Color::Green);
 		evade();
 		age();
 		break;
@@ -180,12 +168,12 @@ std::vector<Grass*> Sheep::findGrassInACone(std::vector<Grass*>& _grassArray, in
 	return result;
 }
 
-sf::Vector2i Sheep::calcEvadeDirection(std::vector<Wolf*>& _wolfArray, int _range)
+sf::Vector2i Sheep::calcEvadeDirection(std::vector<sf::Vector2i*>& _wolfArray, int _range)
 {
 	// 0 = North, 1 = East, 2 = South, 3 = West
 	int threatLevel[4] = { 0, 0, 0, 0 };
 	for (auto wolf = _wolfArray.begin(); wolf != _wolfArray.end(); wolf++) {
-		sf::Vector2i vec = (*wolf)->pos - pos;
+		sf::Vector2i vec = (**wolf) - pos;
 		if (vec.y < 0.f && vec.x < vec.y && vec.x > -vec.y) {
 			threatLevel[0]++;
 		}
@@ -206,6 +194,19 @@ sf::Vector2i Sheep::calcEvadeDirection(std::vector<Wolf*>& _wolfArray, int _rang
 			highest = threatLevel[i];
 			index = i;
 		}
+	}
+
+	if (pos.y == 0) {
+		index = 0;
+	}
+	else if (pos.x == 0) {
+		index = 1;
+	}
+	else if (pos.y == Grid::Instance()->Rows()) {
+		index = 2;
+	}
+	else if(pos.x == Grid::Instance()->Columns()){
+		index = 3;
 	}
 
 	if (index = 0) {

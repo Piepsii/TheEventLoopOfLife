@@ -35,8 +35,8 @@ private:
 	Grass* getGrassAtPos(uint32_t x, uint32_t y);
 
 	Grid* grid;
-	int sheepAmount = 20;
-	int wolfAmount = 5;
+	int sheepAmount = 10;
+	int wolfAmount = 1;
 	int crowAmount = 30;
 	std::vector<Grass*> grassArray;
 	std::vector<Sheep*> sheepArray;

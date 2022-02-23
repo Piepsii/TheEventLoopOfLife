@@ -7,7 +7,6 @@
 #include "Grass.h"
 #include "Subject.h"
 #include "Observer.h"
-#include "Wolf.h"
 
 enum class SheepState {
     Evading,
@@ -22,7 +21,7 @@ class Sheep :
 {
 public:
     Sheep(sf::Vector2i _pos);
-    void sense(std::vector<Grass*>& _grassArray, std::vector<Wolf*>& _wolfArray);
+    void sense(std::vector<Grass*>& _grassArray, std::vector<sf::Vector2i*>& _wolfArray);
     void decide();
     void act();
     sf::CircleShape getBody();
@@ -41,7 +40,7 @@ private:
     void age();
     void die();
     std::vector<Grass*> findGrassInACone(std::vector<Grass*>& _grassArray, int _range);
-    sf::Vector2i calcEvadeDirection(std::vector<Wolf*>& _wolfArray, int _range);
+    sf::Vector2i calcEvadeDirection(std::vector<sf::Vector2i*>& _wolfArray, int _range);
 
     bool seen = false;
     bool target = false;
@@ -61,7 +60,7 @@ private:
     Grass* grassBeingGrazed;
     std::vector<Grass*> grassInSight;
     std::vector<Grass*> grassInFront;
-    std::vector<Wolf*> sensedWolves;
+    std::vector<sf::Vector2i*> sensedWolves;
     SheepState state = SheepState::Wandering;
     sf::CircleShape body = sf::CircleShape();
 

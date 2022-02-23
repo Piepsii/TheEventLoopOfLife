@@ -111,8 +111,13 @@ void World::sense()
 		(*grass)->sense();
 	}
 
+	std::vector<sf::Vector2i*> wolfPositions;
+	for (auto wolf = wolfArray.begin(); wolf != wolfArray.end(); ++wolf) {
+		wolfPositions.push_back(&(*wolf)->pos);
+	}
+
 	for (auto sheep = sheepArray.begin(); sheep != sheepArray.end(); ++sheep) {
-		(*sheep)->sense(grassArray, wolfArray);
+		(*sheep)->sense(grassArray, wolfPositions);
 	}
 
 	for (auto wolf = wolfArray.begin(); wolf != wolfArray.end(); ++wolf) {

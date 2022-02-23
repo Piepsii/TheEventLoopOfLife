@@ -43,7 +43,7 @@ private:
     float distanceToNearestSheep = FLT_MAX;
     const float senseRange = 3.0f;
     const float eatRange = 1.0f;
-    const float ageFactor = 0.003f;
+    const float ageFactor = 0.006f;
     const float moveTime = 0.4f;
     const float breedTime = 3.0f;
     const float breedCost = 0.7f;
