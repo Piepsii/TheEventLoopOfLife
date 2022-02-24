@@ -44,7 +44,7 @@ private:
     const float senseRange = 3.0f;
     const float eatRange = 1.0f;
     const float ageFactor = 0.006f;
-    const float moveTime = 0.4f;
+    const float moveTime = 0.2f;
     const float breedTime = 3.0f;
     const float breedCost = 0.7f;
     const float hunger = 0.006f;

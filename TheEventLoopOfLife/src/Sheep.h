@@ -44,6 +44,7 @@ private:
 
     bool seen = false;
     bool target = false;
+    bool isBeingEaten = false;
     float currentBreedTime = 0.0f;
     const int senseRange = 5;
     const int eatRange = 1;

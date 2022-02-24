@@ -23,8 +23,8 @@ World::World(uint32_t _columns,
 			grass->setHealth(float(rand() / (RAND_MAX + 1.)));
 		}
 		if (i < grid->Columns()
-			|| i % grid->Columns() - 1 == 0
 			|| i % grid->Columns() == 0
+			|| i % grid->Columns() == grid->Columns() - 1
 			|| i >(grid->Rows() - 1) * grid->Columns()) {
 			grass->gridState = GridState::EDGE;
 		}
@@ -185,7 +185,7 @@ void World::act()
 void World::draw(sf::RenderWindow& _window)
 {
 	for (auto grass = grassArray.begin(); grass != grassArray.end(); ++grass) {
-		(*grass)->drawDebug();
+		//(*grass)->drawDebug();
 		_window.draw((*grass)->getRect());
 	}
 

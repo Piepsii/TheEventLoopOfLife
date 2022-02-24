@@ -84,10 +84,6 @@ void Sheep::act()
 {
 	// SWITCH THE STATE MACHINE
 
-	if (health <= 0.0f) {
-		die();
-	}
-
 	switch (state) {
 	case SheepState::Evading:
 		body.setFillColor(sf::Color::Green);
@@ -144,6 +140,11 @@ void Sheep::act()
 		if(grassBeingGrazed)
 			grassBeingGrazed->debugColor = DebugColor::YELLOW;
 	}
+
+	if (health <= 0.0f) {
+		die();
+	}
+
 }
 
 std::vector<Grass*> Sheep::findGrassInACone(std::vector<Grass*>& _grassArray, int _range)
@@ -152,6 +153,9 @@ std::vector<Grass*> Sheep::findGrassInACone(std::vector<Grass*>& _grassArray, in
 	int grassAmount = _grassArray.size();
 	int gridSize = Grid::Instance()->Columns();
 	int index = pos.x + pos.y * gridSize;
+	if (index < 0 || index > grassAmount)
+		return result;
+
 	grassBelow = _grassArray[index];
 
 	for (int yOffset = 0, x = 1; x <= 1 + _range * 2; x += 2, yOffset--) {
@@ -177,17 +181,20 @@ sf::Vector2i Sheep::calcEvadeDirection(std::vector<sf::Vector2i*>& _wolfArray, i
 		if (vec.y < 0.f && vec.x < vec.y && vec.x > -vec.y) {
 			threatLevel[0]++;
 		}
-		else if (vec.x > 0.f && vec.y < vec.x && vec.y > -vec.x) {
+		else if (vec.x > 0 && vec.y < vec.x && vec.y > -vec.x) {
 			threatLevel[1]++;
 		}
-		else if (vec.y > 0.f && vec.x < vec.y && vec.x > -vec.y) {
+		else if (vec.y > 0 && vec.x < vec.y && vec.x > -vec.y) {
 			threatLevel[2]++;
 		}
-		else if (vec.x < 0.f && vec.y < vec.x && vec.y > -vec.x) {
+		else if (vec.x < 0 && vec.y < vec.x && vec.y > -vec.x) {
 			threatLevel[3]++;
 		}
+		else if (vec.x == 0 && vec.y == 0) {
+			isBeingEaten = true;
+			return sf::Vector2i{ 0, 0 };
+		}
 	}
-
 	int index = -1, highest = 0;
 	for (int i = 0; i < 4; i++) {
 		if (threatLevel[i] > highest) {
@@ -197,25 +204,25 @@ sf::Vector2i Sheep::calcEvadeDirection(std::vector<sf::Vector2i*>& _wolfArray, i
 	}
 
 	if (pos.y == 0) {
-		index = 0;
+		return sf::Vector2i{ 0, 1 };
 	}
-	else if (pos.x == 0) {
-		index = 1;
+	else if (pos.x == Grid::Instance()->Columns()) {
+		return sf::Vector2i{ -1, 0 };
 	}
 	else if (pos.y == Grid::Instance()->Rows()) {
-		index = 2;
+		return sf::Vector2i{ 0, -1 };
 	}
-	else if(pos.x == Grid::Instance()->Columns()){
-		index = 3;
+	else if(pos.x == 0){
+		return sf::Vector2i{ 1, 0 };
 	}
 
-	if (index = 0) {
+	if (index == 0) {
 		return sf::Vector2i{ 0, 1 };
-	} else if (index = 1) {
+	} else if (index == 1) {
 		return sf::Vector2i{ -1, 0 };
-	} else if (index = 2) {
+	} else if (index == 2) {
 		return sf::Vector2i{ 0, -1 };
-	} else if (index = 3) {
+	} else if (index == 3) {
 		return sf::Vector2i{ 1, 0 };
 	}
 	return sf::Vector2i{ 0, 0 };

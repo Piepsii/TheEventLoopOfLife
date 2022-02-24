@@ -31,6 +31,10 @@ void Wolf::decide()
 	}
 
 	if (nearestSheep) {
+		if (nearestSheep->pos.x >= 0) {
+			state = WolfState::Wandering;
+			return;
+		}
 		state = WolfState::Pursuing;
 		return;
 	}
