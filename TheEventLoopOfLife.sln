@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.31729.503
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TheEventLoopOfLife", "TheEventLoopOfLife\TheEventLoopOfLife.vcxproj", "{CF7D2CA8-B646-461D-89E4-4470596A0457}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TheEventLoopOfLifeTests", "TheEventLoopOfLifeTests\TheEventLoopOfLifeTests.vcxproj", "{BE2449C9-8EA1-4E27-B9AC-38ECC635A6A0}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -23,14 +21,6 @@ Global
 		{CF7D2CA8-B646-461D-89E4-4470596A0457}.Release|x64.Build.0 = Release|x64
 		{CF7D2CA8-B646-461D-89E4-4470596A0457}.Release|x86.ActiveCfg = Release|Win32
 		{CF7D2CA8-B646-461D-89E4-4470596A0457}.Release|x86.Build.0 = Release|Win32
-		{BE2449C9-8EA1-4E27-B9AC-38ECC635A6A0}.Debug|x64.ActiveCfg = Debug|x64
-		{BE2449C9-8EA1-4E27-B9AC-38ECC635A6A0}.Debug|x64.Build.0 = Debug|x64
-		{BE2449C9-8EA1-4E27-B9AC-38ECC635A6A0}.Debug|x86.ActiveCfg = Debug|Win32
-		{BE2449C9-8EA1-4E27-B9AC-38ECC635A6A0}.Debug|x86.Build.0 = Debug|Win32
-		{BE2449C9-8EA1-4E27-B9AC-38ECC635A6A0}.Release|x64.ActiveCfg = Release|x64
-		{BE2449C9-8EA1-4E27-B9AC-38ECC635A6A0}.Release|x64.Build.0 = Release|x64
-		{BE2449C9-8EA1-4E27-B9AC-38ECC635A6A0}.Release|x86.ActiveCfg = Release|Win32
-		{BE2449C9-8EA1-4E27-B9AC-38ECC635A6A0}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
