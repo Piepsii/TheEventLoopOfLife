@@ -14,6 +14,7 @@ Sheep::Sheep(sf::Vector2i _pos)
 	body.setPosition((tileSize + 1) * posf.x + tileSize / 2,
 					 (tileSize + 1) * posf.y + tileSize / 2);
 	body.setScale(sf::Vector2f(health + 0.5f, health + 0.5f));
+	senseDecideFrequency = 0.2f;
 }
 
 void Sheep::sense(std::vector<Grass*>& _grassArray, std::vector<sf::Vector2i*>& _wolfArray)
@@ -351,5 +352,5 @@ void Sheep::age()
 
 void Sheep::die()
 {
-	notify(this, Event::DEATH);
+	notify(this, Event::DEATH_SHEEP);
 }

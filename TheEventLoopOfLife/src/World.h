@@ -11,7 +11,8 @@
 
 enum class ToDeleteType {
 	GRASS,
-	SHEEP
+	SHEEP,
+	WOLF
 };
 
 class World : public Observer
@@ -24,8 +25,6 @@ public:
 		  uint32_t _tileSize);
 	~World();
 
-	void sense();
-	void decide();
 	void act();
 	void draw(sf::RenderWindow& _window);
 	void onNotify(const Agent& _agent, Event _event);
@@ -33,6 +32,8 @@ public:
 private:
 	std::vector<Grass*> getNeighboringGrasses(int index);
 	Grass* getGrassAtPos(uint32_t x, uint32_t y);
+	void plantGrass(int _chance);
+	void removeDeadAgents();
 
 	Grid* grid;
 	int sheepAmount = 10;
@@ -42,7 +43,7 @@ private:
 	std::vector<Sheep*> sheepArray;
 	std::vector<Wolf*> wolfArray;
 	std::vector<Crow*> crowArray;
-	uint32_t grassSpawnChance = 30;
+	int grassSpawnChance = 30;
 	float tileSize = 1.0f;
 
 	ToDeleteType toDeleteType;

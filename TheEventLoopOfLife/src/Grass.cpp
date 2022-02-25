@@ -5,6 +5,7 @@ Grass::Grass()
 	seed = sf::Color(130, 50, 0, 255);
 	mature = sf::Color(38, 77, 0, 255);
 	dirt = sf::Color(77, 38, 0, 255);
+	senseDecideFrequency = 0.5f;
 }
 
 void Grass::create()

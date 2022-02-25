@@ -21,16 +21,7 @@ Simulation::~Simulation()
 
 bool Simulation::update(float deltaTime)
 {
-	if (senseDecideCounter == 0) {
-		world->sense();
-		world->decide();
-	}
 	world->act();
-
-	senseDecideCounter++;
-	if (senseDecideCounter == senseDecideFrequency)
-		senseDecideCounter = 0;
-
 	return true;
 }
 

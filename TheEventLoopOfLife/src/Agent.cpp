@@ -1,4 +1,12 @@
 #include "Agent.h"
+#include "Time.h"
+
+uint32_t Agent::idCounter = 0;
+
+Agent::Agent()
+{
+	id = idCounter++;
+}
 
 void Agent::sense()
 {
@@ -10,6 +18,16 @@ void Agent::decide()
 
 void Agent::act()
 {
+}
+
+bool Agent::isSensingDeciding()
+{
+	senseDecideCounter += Time::deltaTime;
+	if (senseDecideCounter >= senseDecideFrequency) {
+		senseDecideCounter = 0.0f;
+		return true;
+	}
+	return false;
 }
 
 void Agent::setSize(float _size)

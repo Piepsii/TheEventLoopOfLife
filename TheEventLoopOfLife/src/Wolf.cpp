@@ -8,6 +8,7 @@ Wolf::Wolf(sf::Vector2i _pos)
 	body.setOutlineColor(sf::Color::Black);
 	body.setOrigin(size, size);
 	body.setFillColor(sf::Color(64, 64, 64, 255));
+	senseDecideFrequency = 0.04f;
 }
 
 void Wolf::sense(std::vector<Sheep*>& _sheepArray)
@@ -182,12 +183,12 @@ void Wolf::wander()
 
 void Wolf::age()
 {
-	health -= ageFactor * Time::deltaTime;
+	health -= ageFactor;
 }
 
 void Wolf::die()
 {
-	notify(this, Event::DEATH);
+	notify(this, Event::DEATH_WOLF);
 }
 
 std::vector<Sheep*> Wolf::findSheepInACone(std::vector<Sheep*>& _sheepArray, int _range)

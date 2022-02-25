@@ -38,15 +38,15 @@ private:
     void die();
     std::vector<Sheep*> findSheepInACone(std::vector<Sheep*>& _sheepArray, int _range);
 
-    float health = 0.3f;
+    float health = 0.7f;
     float currentBreedTime = 0.0f;
     float distanceToNearestSheep = FLT_MAX;
     const float senseRange = 3.0f;
     const float eatRange = 1.0f;
-    const float ageFactor = 0.006f;
-    const float moveTime = 0.3f;
-    const float breedTime = 3.0f;
-    const float breedCost = 0.7f;
+    const float ageFactor = 0.001f;
+    const float moveTime = 0.2f;
+    const float breedTime = 4.0f;
+    const float breedCost = 0.2f;
     const float hunger = 0.006f;
     const float senseAngle = 90.0f;
     const float breedThreshold = 0.8f;

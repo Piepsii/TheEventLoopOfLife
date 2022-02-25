@@ -18,7 +18,7 @@ World::World(uint32_t _columns,
 			i % _columns,
 			floor(i / _rows));
 		grass->create();
-		if (rand() % 100 < (int)grassSpawnChance) {
+		if (rand() % 100 < grassSpawnChance) {
 			grass->setState(GrassState::Seed);
 			grass->setHealth(float(rand() / (RAND_MAX + 1.)));
 		}
@@ -105,75 +105,36 @@ World::~World()
 	}
 }
 
-void World::sense()
-{
-	for (auto grass = grassArray.begin(); grass != grassArray.end(); ++grass) {
-		(*grass)->sense();
-	}
-
-	std::vector<sf::Vector2i*> wolfPositions;
-	for (auto wolf = wolfArray.begin(); wolf != wolfArray.end(); ++wolf) {
-		wolfPositions.push_back(&(*wolf)->pos);
-	}
-
-	for (auto sheep = sheepArray.begin(); sheep != sheepArray.end(); ++sheep) {
-		(*sheep)->sense(grassArray, wolfPositions);
-	}
-
-	for (auto wolf = wolfArray.begin(); wolf != wolfArray.end(); ++wolf) {
-		(*wolf)->sense(sheepArray);
-	}
-}
-
-void World::decide()
-{
-	for (auto grass = grassArray.begin(); grass != grassArray.end(); ++grass) {
-		(*grass)->decide();
-	}
-
-	for (auto sheep = sheepArray.begin(); sheep != sheepArray.end(); ++sheep) {
-		(*sheep)->decide();
-	}
-
-	for (auto wolf = wolfArray.begin(); wolf != wolfArray.end(); ++wolf) {
-		(*wolf)->decide();
-	}
-}
-
 void World::act()
 {
-	// note: I know that this way of discerning types is horrible practice.
-	//	     I just can't figure out anything else at the moment.
-	if (toDeleteIndex > -1) {
-		switch (toDeleteType) {
-		case ToDeleteType::GRASS:
+	removeDeadAgents();
+	plantGrass(1);
 
-			break;
-		case ToDeleteType::SHEEP:
-			auto corpse = sheepArray.begin() + toDeleteIndex;
-			delete sheepArray[toDeleteIndex];
-			sheepArray[toDeleteIndex] = nullptr;
-			sheepArray.erase(corpse);
-			break;
+	for (auto grass = grassArray.begin(); grass != grassArray.end(); grass++) {
+		if ((*grass)->isSensingDeciding()) {
+			(*grass)->sense();
+			(*grass)->decide();
 		}
-		toDeleteIndex = -1;
-	}
-
-	sheepArray.insert(sheepArray.end(), sheepToBreed.begin(), sheepToBreed.end());
-	sheepToBreed.clear();
-
-	wolfArray.insert(wolfArray.end(), wolfToBreed.begin(), wolfToBreed.end());
-	wolfToBreed.clear();
-
-	for (auto grass = grassArray.begin(); grass != grassArray.end(); ++grass) {
 		(*grass)->act();
 	}
 
 	for (auto sheep = sheepArray.begin(); sheep != sheepArray.end(); sheep++) {
+		if ((*sheep)->isSensingDeciding()) {
+			std::vector<sf::Vector2i*> wolfPositions;
+			for (auto wolf = wolfArray.begin(); wolf != wolfArray.end(); ++wolf) {
+				wolfPositions.push_back(&(*wolf)->pos);
+			}
+			(*sheep)->sense(grassArray, wolfPositions);
+			(*sheep)->decide();
+		}
 		(*sheep)->act();
 	}
 
 	for (auto wolf = wolfArray.begin(); wolf != wolfArray.end(); wolf++) {
+		if ((*wolf)->isSensingDeciding()) {
+			(*wolf)->sense(sheepArray);
+			(*wolf)->decide();
+		}
 		(*wolf)->act();
 	}
 
@@ -207,16 +168,24 @@ void World::onNotify(const Agent& _agent, Event _event)
 {
 	sf::Vector2i spawnPos;
 	switch (_event) {
-	case Event::DEATH:
+	case Event::DEATH_SHEEP:
 		for (int i = 0; i < sheepArray.size(); ++i) {
-			if (sheepArray[i]->pos == _agent.pos) { // error: two sheep can have the same pos
+			if (sheepArray[i]->id == _agent.id) {
 				toDeleteType = ToDeleteType::SHEEP;
 				toDeleteIndex = i;
 				break;
 			}
 		}
 		break;
-
+	case Event::DEATH_WOLF:
+		for (int i = 0; i < wolfArray.size(); ++i) {
+			if (wolfArray[i]->id == _agent.id) {
+				toDeleteType = ToDeleteType::WOLF;
+				toDeleteIndex = i;
+				break;
+			}
+		}
+		break;
 	case Event::BREED_SHEEP:
 		spawnPos = grid->GetRandomNeighbor(_agent.pos);
 		Sheep* sheep;
@@ -266,4 +235,46 @@ Grass* World::getGrassAtPos(uint32_t x, uint32_t y)
 		return nullptr;
 	}
 	return grassArray[y * grid->Columns() + x];
+}
+
+void World::plantGrass(int _chance)
+{
+	int randomGrassIndex = rand() % grassArray.size();
+	if (rand() % 100 < _chance) {
+		grassArray[randomGrassIndex]->setState(GrassState::Seed);
+		grassArray[randomGrassIndex]->setHealth(0.0f);
+	}
+}
+
+void World::removeDeadAgents()
+{	// note: I know that this way of discerning types is horrible practice.
+	//	     I just can't figure out anything else at the moment.
+	std::vector<Sheep*>::iterator sheepIterator;
+	std::vector<Wolf*>::iterator wolfIterator;
+	if (toDeleteIndex > -1) {
+		switch (toDeleteType) {
+		case ToDeleteType::GRASS:
+
+			break;
+		case ToDeleteType::SHEEP:
+			sheepIterator = sheepArray.begin() + toDeleteIndex;
+			delete sheepArray[toDeleteIndex];
+			sheepArray[toDeleteIndex] = nullptr;
+			sheepArray.erase(sheepIterator);
+			break;
+		case ToDeleteType::WOLF:
+			wolfIterator = wolfArray.begin() + toDeleteIndex;
+			delete wolfArray[toDeleteIndex];
+			wolfArray[toDeleteIndex] = nullptr;
+			wolfArray.erase(wolfIterator);
+			break;
+		}
+		toDeleteIndex = -1;
+	}
+
+	sheepArray.insert(sheepArray.end(), sheepToBreed.begin(), sheepToBreed.end());
+	sheepToBreed.clear();
+
+	wolfArray.insert(wolfArray.end(), wolfToBreed.begin(), wolfToBreed.end());
+	wolfToBreed.clear();
 }
