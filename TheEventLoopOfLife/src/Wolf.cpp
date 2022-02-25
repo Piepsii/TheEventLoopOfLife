@@ -32,26 +32,18 @@ void Wolf::decide()
 
 	if (nearestSheep) {
 		if (nearestSheep->pos.x >= 0) {
-			state = WolfState::Wandering;
+			state = WolfState::Pursuing;
 			return;
 		}
-		state = WolfState::Pursuing;
-		return;
 	}
-	else {
-		state = WolfState::Wandering;
-		return;
-	}
+
+	state = WolfState::Wandering;
+	return;
 
 }
 
 void Wolf::act()
 {
-	// SWITCH THE STATE MACHINE
-	if (health <= 0.0f) {
-		die();
-	}
-
 	switch (state) {
 	case WolfState::Eating:
 		body.setFillColor(sf::Color::Blue);
@@ -74,14 +66,16 @@ void Wolf::act()
 		break;
 	}
 
-	double pi = 2 * acos(0.0);
-	float rotation = (float)(atan2(direction.y, direction.x) * 180.f / pi + 90.f);
-	body.setRotation(rotation);
+	if (state != WolfState::Breeding) {
+		double pi = 2 * acos(0.0);
+		float rotation = (float)(atan2(direction.y, direction.x) * 180.f / pi + 90.f);
+		body.setRotation(rotation);
+	}
 
 	auto tileSize = Grid::Instance()->TileSize();
 	body.setPosition((tileSize + 1) * posf.x + tileSize / 2,
 					 (tileSize + 1) * posf.y + tileSize / 2);
-	body.setScale(sf::Vector2f(health + 0.5f, health + 0.5f));
+	body.setScale(sf::Vector2f(health + 0.3f, health + 0.3f));
 
 	for (auto sheep = sheepInSight.begin(); sheep != sheepInSight.end(); sheep++) {
 		(*sheep)->markAsSeen();
@@ -97,6 +91,11 @@ void Wolf::act()
 		distanceToNearestSheep = FLT_MAX;
 		nearestSheep = nullptr;
 	}
+
+	if (health <= 0.0f) {
+		die();
+	}
+
 }
 
 sf::CircleShape Wolf::getBody()
@@ -117,6 +116,7 @@ void Wolf::eat()
 void Wolf::breed()
 {
 	currentBreedTime += Time::deltaTime;
+	body.setRotation(currentBreedTime / breedTime * 360.f);
 	if (currentBreedTime > breedTime) {
 		health -= breedCost;
 		notify(this, Event::BREED_WOLF);

@@ -174,6 +174,7 @@ std::vector<Grass*> Sheep::findGrassInACone(std::vector<Grass*>& _grassArray, in
 
 sf::Vector2i Sheep::calcEvadeDirection(std::vector<sf::Vector2i*>& _wolfArray, int _range)
 {
+	// index = direction of danger
 	// 0 = North, 1 = East, 2 = South, 3 = West
 	int threatLevel[4] = { 0, 0, 0, 0 };
 	for (auto wolf = _wolfArray.begin(); wolf != _wolfArray.end(); wolf++) {

@@ -21,9 +21,9 @@ private:
     sf::CircleShape shadow = sf::CircleShape(0.0f, 3);
     float speed = 3.0f;
     float steerPercentage = 0.05f;
-    float alignmentRadius = 4.0f;
-    float cohesionRadius = 20.0f;
-    float separationRadius = 0.2f;
+    float alignmentRadius = 2.0f;
+    float cohesionRadius = 3.0f;
+    float separationRadius = 0.4f;
     float shadowOffset = 0.8f;
     sf::Vector2f alignment;
     sf::Vector2f cohesion;
@@ -34,6 +34,7 @@ private:
     std::vector<Crow*> cohesionCrows;
     std::vector<Crow*> separationCrows;
 
+    void worldWrap();
     sf::Vector2f calcAlignment();
     sf::Vector2f calcCohesion();
     sf::Vector2f calcSeparation();

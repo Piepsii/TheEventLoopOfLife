@@ -49,7 +49,7 @@ private:
     const int senseRange = 5;
     const int eatRange = 1;
     const int evadeRange = 3;
-    const float moveTime = 0.6f;
+    const float moveTime = 0.5f;
     const float hunger = 0.003f;
     const float headSize = 2.0f;
     const float ageFactor = 0.001f;

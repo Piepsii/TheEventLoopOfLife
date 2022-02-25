@@ -36,7 +36,9 @@ void Crow::update(std::vector<Crow*>& _crows)
 	idealVelocity = alignment + cohesion + separation;
 	idealVelocity = normalize(idealVelocity);
 	velocity = velocity * (1.0f - steerPercentage) + idealVelocity * steerPercentage;
-	velocity = sf::Vector2f(std::max(velocity.x, minVelocity.x), std::max(velocity.y, minVelocity.y));
+	if (magnitude(velocity) < magnitude(minVelocity)) {
+		velocity = minVelocity;
+	}
 	posf += velocity * Time::deltaTime * speed;
 	uint32_t tileSize = Grid::Instance()->TileSize();
 	body.setPosition((tileSize + 1) * posf.x + tileSize / 2,
@@ -50,14 +52,7 @@ void Crow::update(std::vector<Crow*>& _crows)
 					 (tileSize + 1) * posf.y + tileSize / 2 + shadowOffset * tileSize);
 	shadow.setRotation(rotation);
 
-	if (posf.x < -1.0f)
-		posf.x = Grid::Instance()->Columns();
-	if (posf.x > Grid::Instance()->Columns())
-		posf.x = -1.0f;
-	if (posf.y < -1.0f)
-		posf.y = Grid::Instance()->Rows();
-	if (posf.y > Grid::Instance()->Rows())
-		posf.y = -1.0f;
+	worldWrap();
 }
 
 sf::CircleShape Crow::getBody()
@@ -83,12 +78,12 @@ sf::Vector2f Crow::calcCohesion()
 {
 	sf::Vector2f result = sf::Vector2f(0.0f, 0.0f);
 	sf::Vector2f centerOfMass = sf::Vector2f(0.0f, 0.0f);
-	for (auto crow = alignmentCrows.begin(); crow != alignmentCrows.end(); crow++) {
-		centerOfMass += (*crow)->velocity;
+	for (auto crow = cohesionCrows.begin(); crow != cohesionCrows.end(); crow++) {
+		centerOfMass += (*crow)->posf;
 	}
-	if (alignmentCrows.size() > 0) {
-		centerOfMass.x /= alignmentCrows.size();
-		centerOfMass.y /= alignmentCrows.size();
+	if (cohesionCrows.size() > 0) {
+		centerOfMass.x /= cohesionCrows.size();
+		centerOfMass.y /= cohesionCrows.size();
 		result = centerOfMass - posf;
 		return result;
 	}
@@ -98,7 +93,7 @@ sf::Vector2f Crow::calcCohesion()
 sf::Vector2f Crow::calcSeparation()
 {
 	sf::Vector2f result = sf::Vector2f(0.0f, 0.0f);
-	for (auto crow = alignmentCrows.begin(); crow != alignmentCrows.end(); crow++) {
+	for (auto crow = separationCrows.begin(); crow != separationCrows.end(); crow++) {
 		result += (*crow)->posf - posf;
 	}
 	result = invert(result);
@@ -119,4 +114,16 @@ std::vector<Crow*> Crow::getCrowsInRadius(std::vector<Crow*>& _crows, float _rad
 		}
 	}
 	return result;
+}
+
+void Crow::worldWrap()
+{
+	if (posf.x < -1.0f)
+		posf.x = Grid::Instance()->Columns();
+	if (posf.x > Grid::Instance()->Columns())
+		posf.x = -1.0f;
+	if (posf.y < -1.0f)
+		posf.y = Grid::Instance()->Rows();
+	if (posf.y > Grid::Instance()->Rows())
+		posf.y = -1.0f;
 }
