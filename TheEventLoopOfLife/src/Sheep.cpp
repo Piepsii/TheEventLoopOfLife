@@ -1,7 +1,28 @@
 #include "Sheep.h"
 #include "Time.h"
 
-Sheep::Sheep(sf::Vector2i _pos)
+Sheep::Sheep(sf::Vector2i _pos) :
+	health(0.1f),
+	debug(false),
+	seen(false),
+	target(false),
+	isBeingEaten(false),
+	currentBreedTime(0.0f),
+	senseRange(5),
+	eatRange(1),
+	evadeRange(3),
+	moveTime(0.5f),
+	hunger(0.003f),
+	headSize(2.0f),
+	ageFactor(0.001f),
+	breedThreshold(0.9f),
+	breedCost(0.5f),
+	breedTime(1.5f),
+	grassBelow(nullptr),
+	nearestMatureGrass(nullptr),
+	grassBeingGrazed(nullptr),
+	state(SheepState::WANDERING)
+
 {
 	pos = _pos;
 	size = Grid::Instance()->TileSize() * 0.2f;
@@ -22,7 +43,7 @@ void Sheep::sense(std::vector<Grass*>& _grassArray, std::vector<sf::Vector2i*>& 
 	grassInSight = findGrassInACone(_grassArray, senseRange);
 
 	for (auto grass = grassInSight.begin(); grass != grassInSight.end(); grass++) {
-		if ((*grass)->state == GrassState::Mature) {
+		if ((*grass)->state == GrassState::MATURE) {
 			nearestMatureGrass = (*grass);
 			break;
 		}
@@ -31,7 +52,7 @@ void Sheep::sense(std::vector<Grass*>& _grassArray, std::vector<sf::Vector2i*>& 
 	grassInFront = findGrassInACone(_grassArray, eatRange);
 
 	for (auto grass = grassInFront.begin(); grass != grassInFront.end(); grass++) {
-		if ((*grass)->state == GrassState::Mature) {
+		if ((*grass)->state == GrassState::MATURE) {
 			grassBeingGrazed = (*grass);
 		}
 	}
@@ -48,33 +69,33 @@ void Sheep::sense(std::vector<Grass*>& _grassArray, std::vector<sf::Vector2i*>& 
 void Sheep::decide()
 {
 	if (sensedWolves.size() > 0) {
-		state = SheepState::Evading;
+		state = SheepState::EVADING;
 		return;
 	}
 
 	if (health > breedThreshold) {
-		state = SheepState::Breeding;
+		state = SheepState::BREEDING;
 		return;
 	}
 
 	if (nearestMatureGrass) {
-		if (nearestMatureGrass->state != GrassState::Mature) {
+		if (nearestMatureGrass->state != GrassState::MATURE) {
 			nearestMatureGrass = nullptr;
-			state = SheepState::Wandering;
+			state = SheepState::WANDERING;
 		}
-		state = SheepState::Finding;
+		state = SheepState::FINDING;
 	}
 	else {
-		state = SheepState::Wandering;
+		state = SheepState::WANDERING;
 	}
 
 
 	if (grassBeingGrazed) {
-		if (grassBeingGrazed->state == GrassState::Mature) {
-			state = SheepState::Eating;
+		if (grassBeingGrazed->state == GrassState::MATURE) {
+			state = SheepState::EATING;
 		}
 		else {
-			state = SheepState::Wandering;
+			state = SheepState::WANDERING;
 			grassBeingGrazed = nullptr;
 		}
 	}
@@ -86,26 +107,26 @@ void Sheep::act()
 	// SWITCH THE STATE MACHINE
 
 	switch (state) {
-	case SheepState::Evading:
+	case SheepState::EVADING:
 		body.setFillColor(sf::Color::Green);
 		evade();
 		age();
 		break;
-	case SheepState::Eating:
+	case SheepState::EATING:
 		body.setFillColor(sf::Color::Blue);
 		eat();
 		age();
 		break;
-	case SheepState::Breeding:
+	case SheepState::BREEDING:
 		body.setFillColor(sf::Color::Red);
 		breed();
 		break;
-	case SheepState::Finding:
+	case SheepState::FINDING:
 		body.setFillColor(sf::Color::Yellow);
 		find();
 		age();
 		break;
-	case SheepState::Wandering:
+	case SheepState::WANDERING:
 		body.setFillColor(sf::Color::White);
 		wander();
 		age();
@@ -151,7 +172,7 @@ void Sheep::act()
 std::vector<Grass*> Sheep::findGrassInACone(std::vector<Grass*>& _grassArray, int _range)
 {
 	std::vector<Grass*> result;
-	int grassAmount = _grassArray.size();
+	int grassAmount = (int)_grassArray.size();
 	int gridSize = Grid::Instance()->Columns();
 	int index = pos.x + pos.y * gridSize;
 	if (index < 0 || index > grassAmount)
@@ -173,7 +194,7 @@ std::vector<Grass*> Sheep::findGrassInACone(std::vector<Grass*>& _grassArray, in
 	return result;
 }
 
-sf::Vector2i Sheep::calcEvadeDirection(std::vector<sf::Vector2i*>& _wolfArray, int _range)
+sf::Vector2i Sheep::calcEvadeDirection(std::vector<sf::Vector2i*>& _wolfArray)
 {
 	// index = direction of danger
 	// 0 = North, 1 = East, 2 = South, 3 = West
@@ -208,10 +229,10 @@ sf::Vector2i Sheep::calcEvadeDirection(std::vector<sf::Vector2i*>& _wolfArray, i
 	if (pos.y == 0) {
 		return sf::Vector2i{ 0, 1 };
 	}
-	else if (pos.x == Grid::Instance()->Columns()) {
+	else if (pos.x == (int)Grid::Instance()->Columns()) {
 		return sf::Vector2i{ -1, 0 };
 	}
-	else if (pos.y == Grid::Instance()->Rows()) {
+	else if (pos.y == (int)Grid::Instance()->Rows()) {
 		return sf::Vector2i{ 0, -1 };
 	}
 	else if(pos.x == 0){
@@ -249,7 +270,7 @@ void Sheep::evade() {
 	switch (moveState) {
 	case MoveState::Search:
 		direction = sf::Vector2i(0, 0);
-		newPos += calcEvadeDirection(sensedWolves, evadeRange);
+		newPos += calcEvadeDirection(sensedWolves);
 		moveState = MoveState::Move;
 		break;
 
@@ -283,7 +304,7 @@ void Sheep::breed()
 	if (currentBreedTime > breedTime) {
 		health -= breedCost;
 		notify(this, Event::BREED_SHEEP);
-		state = SheepState::Wandering;
+		state = SheepState::WANDERING;
 		currentBreedTime = 0.0f;
 	}
 }

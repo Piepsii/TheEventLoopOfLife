@@ -3,9 +3,19 @@
 
 uint32_t Agent::idCounter = 0;
 
-Agent::Agent()
+Agent::Agent() : 
+	senseDecideCounter(0.0f),
+	senseDecideFrequency(0.0f),
+	id(idCounter++),
+	pos(sf::Vector2i(0, 0)),
+	posf(sf::Vector2f(0.0f, 0.0f)),
+	direction(sf::Vector2i(0, 0)),
+	newPos(sf::Vector2i(0, 0)),
+	moveState(MoveState::Search),
+	moveTime(0.2f),
+	currentMoveTime(0.0f)
+
 {
-	id = idCounter++;
 }
 
 void Agent::sense()

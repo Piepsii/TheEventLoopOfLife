@@ -11,9 +11,9 @@
 #include "Subject.h"
 
 enum class GrassState {
-    Seed,
-    Mature,
-    Dirt
+    SEED,
+    MATURE,
+    DIRT
 };
 
 enum class GridState {
@@ -37,7 +37,6 @@ public:
     void sense();
     void decide();
     void act();
-
     void drawDebug();
     sf::RectangleShape getRect();
     void setState(GrassState _state);
@@ -46,7 +45,7 @@ public:
     void onNotify(const Agent& _agent, Event _event) override;
 
     int spreadChance = 1;
-    GrassState state = GrassState::Dirt;
+    GrassState state = GrassState::DIRT;
     GridState gridState = GridState::CENTRAL;
     float health = 0.0f;
     DebugColor debugColor = DebugColor::DEFAULT;

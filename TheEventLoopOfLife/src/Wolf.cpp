@@ -22,23 +22,23 @@ void Wolf::sense(std::vector<Sheep*>& _sheepArray)
 void Wolf::decide()
 {
 	if (health > breedThreshold) {
-		state = WolfState::Breeding;
+		state = WolfState::BREEDING;
 		return;
 	}
 
 	if (sheepInFront.size() > 0) {
-		state = WolfState::Eating;
+		state = WolfState::EATING;
 		return;
 	}
 
 	if (nearestSheep) {
 		if (nearestSheep->pos.x >= 0) {
-			state = WolfState::Pursuing;
+			state = WolfState::PURSUING;
 			return;
 		}
 	}
 
-	state = WolfState::Wandering;
+	state = WolfState::WANDERING;
 	return;
 
 }
@@ -46,28 +46,28 @@ void Wolf::decide()
 void Wolf::act()
 {
 	switch (state) {
-	case WolfState::Eating:
+	case WolfState::EATING:
 		body.setFillColor(sf::Color::Blue);
 		eat();
 		age();
 		break;
-	case WolfState::Breeding:
+	case WolfState::BREEDING:
 		body.setFillColor(sf::Color::Red);
 		breed();
 		break;
-	case WolfState::Pursuing:
+	case WolfState::PURSUING:
 		body.setFillColor(sf::Color::Yellow);
 		pursue();
 		age();
 		break;
-	case WolfState::Wandering:
+	case WolfState::WANDERING:
 		body.setFillColor(sf::Color(64, 64, 64, 255));
 		wander();
 		age();
 		break;
 	}
 
-	if (state != WolfState::Breeding) {
+	if (state != WolfState::BREEDING) {
 		double pi = 2 * acos(0.0);
 		float rotation = (float)(atan2(direction.y, direction.x) * 180.f / pi + 90.f);
 		body.setRotation(rotation);
@@ -121,7 +121,7 @@ void Wolf::breed()
 	if (currentBreedTime > breedTime) {
 		health -= breedCost;
 		notify(this, Event::BREED_WOLF);
-		state = WolfState::Wandering;
+		state = WolfState::WANDERING;
 		currentBreedTime = 0.0f;
 	}
 }

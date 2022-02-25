@@ -9,10 +9,10 @@
 enum class MoveState;
 
 enum class WolfState {
-    Eating,
-    Breeding,
-    Pursuing,
-    Wandering
+    EATING,
+    BREEDING,
+    PURSUING,
+    WANDERING
 };
 
 class Wolf :
@@ -54,7 +54,7 @@ private:
     Sheep* sheepBeingEaten;
     std::vector<Sheep*> sheepInSight;
     std::vector<Sheep*> sheepInFront;
-    WolfState state = WolfState::Wandering;
+    WolfState state = WolfState::WANDERING;
     sf::CircleShape body = sf::CircleShape(0.0f, 3);
 };
 

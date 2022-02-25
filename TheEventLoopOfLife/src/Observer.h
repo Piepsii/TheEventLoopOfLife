@@ -3,8 +3,6 @@
 class Agent;
 #include "Event.h"
 
-// sheep, grass, wolf etc
-
 class Observer
 {
 public:

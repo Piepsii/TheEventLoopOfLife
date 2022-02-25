@@ -59,7 +59,7 @@ int main() {
         window.clear(sf::Color::Black);
         window.setActive();
 
-        if (Time::update() && sim->update(delta.asSeconds())) {
+        if (Time::update() && sim->update()) {
             sim->draw(window);
         }
         else {

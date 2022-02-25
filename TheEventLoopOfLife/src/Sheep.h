@@ -9,11 +9,11 @@
 #include "Observer.h"
 
 enum class SheepState {
-    Evading,
-    Eating,
-    Breeding,
-    Finding,
-    Wandering
+    EVADING,
+    EATING,
+    BREEDING,
+    FINDING,
+    WANDERING
 };
 
 class Sheep :
@@ -28,8 +28,8 @@ public:
     void markAsSeen();
     void markAsTarget();
 
-    float health = 0.1f;
-    bool debug = false;
+    float health;
+    bool debug;
 
 private:
     void evade();
@@ -40,30 +40,30 @@ private:
     void age();
     void die();
     std::vector<Grass*> findGrassInACone(std::vector<Grass*>& _grassArray, int _range);
-    sf::Vector2i calcEvadeDirection(std::vector<sf::Vector2i*>& _wolfArray, int _range);
+    sf::Vector2i calcEvadeDirection(std::vector<sf::Vector2i*>& _wolfArray);
 
-    bool seen = false;
-    bool target = false;
-    bool isBeingEaten = false;
-    float currentBreedTime = 0.0f;
-    const int senseRange = 5;
-    const int eatRange = 1;
-    const int evadeRange = 3;
-    const float moveTime = 0.5f;
-    const float hunger = 0.003f;
-    const float headSize = 2.0f;
-    const float ageFactor = 0.001f;
-    const float breedThreshold = 0.9f;
-    const float breedCost = 0.5f;
-    const float breedTime = 1.5f;
-    Grass* grassBelow;
-    Grass* nearestMatureGrass;
-    Grass* grassBeingGrazed;
+    bool seen;
+    bool target;
+    bool isBeingEaten;
+    float currentBreedTime;
+    const int senseRange;
+    const int eatRange;
+    const int evadeRange;
+    const float moveTime;
+    const float hunger;
+    const float headSize;
+    const float ageFactor;
+    const float breedThreshold;
+    const float breedCost;
+    const float breedTime;
+    Grass* grassBelow{};
+    Grass* nearestMatureGrass{};
+    Grass* grassBeingGrazed{};
     std::vector<Grass*> grassInSight;
     std::vector<Grass*> grassInFront;
     std::vector<sf::Vector2i*> sensedWolves;
-    SheepState state = SheepState::Wandering;
-    sf::CircleShape body = sf::CircleShape();
+    SheepState state;
+    sf::CircleShape body;
 
-    float magnitude(sf::Vector2i v) { return sqrt(v.x * v.x + v.y * v.y); }
+    float magnitude(sf::Vector2i v) { return sqrtf(v.x * v.x + v.y * v.y); }
 };

@@ -23,13 +23,13 @@ void Grass::sense()
 void Grass::decide()
 {
 	if (health >= 1.0f)
-		setState(GrassState::Mature);
+		setState(GrassState::MATURE);
 
 	if (health <= 0.0f)
-		setState(GrassState::Dirt);
+		setState(GrassState::DIRT);
 
 	if (wasTrampled) {
-		setState(GrassState::Dirt);
+		setState(GrassState::DIRT);
 		health = 0.0f;
 		wasTrampled = false;
 	}
@@ -38,18 +38,18 @@ void Grass::decide()
 void Grass::act()
 {
 	switch (state) {
-	case GrassState::Seed:
+	case GrassState::SEED:
 		health < 1.0f ? health += growthFactor : health = health;
 		rect.setFillColor(LerpRGB(seed, mature, std::clamp(health, 0.f, 1.f)));
 
 		break;
-	case GrassState::Mature:
+	case GrassState::MATURE:
 		health > 0.0f ? health -= witherFactor : health = health;
 		rect.setFillColor(LerpRGB(mature, dirt, std::clamp(1.0f - health, 0.f, 1.f)));
 		notify(this, Event::GROW);
 
 		break;
-	case GrassState::Dirt:
+	case GrassState::DIRT:
 		rect.setFillColor(dirt);
 		break;
 	}
@@ -114,14 +114,14 @@ int Grass::getRandomNeighborAsIndex()
 void Grass::onNotify(const Agent& _agent, Event _event) {
 	switch (_event) {
 	case Event::TRAMPLE:
-		if (_agent.pos == pos && state != GrassState::Dirt) {
+		if (_agent.pos == pos && state != GrassState::DIRT) {
 			wasTrampled = true;
 		}
 		break;
 	case Event::GROW:
 		if (rand() % 1000 < spreadChance) {
-			if (state == GrassState::Dirt) {
-				setState(GrassState::Seed);
+			if (state == GrassState::DIRT) {
+				setState(GrassState::SEED);
 			}
 		}
 		break;

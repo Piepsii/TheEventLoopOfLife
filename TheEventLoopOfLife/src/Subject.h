@@ -6,8 +6,6 @@
 #include "Event.h"
 #include "Agent.h"
 
-// Trample
-
 class Subject {
 public:
 	void addObserver(Observer* _observer);

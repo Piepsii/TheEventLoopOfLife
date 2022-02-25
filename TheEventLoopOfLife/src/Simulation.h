@@ -18,7 +18,7 @@ public:
 			   uint32_t _tileSize);
 	~Simulation();
 
-	bool update(float deltaTime);
+	bool update();
 	void draw(sf::RenderWindow& _window);
 
 private:

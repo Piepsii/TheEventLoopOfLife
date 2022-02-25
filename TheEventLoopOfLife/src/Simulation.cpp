@@ -1,5 +1,3 @@
-// Simulation.cpp
-
 #include "Simulation.h"
 
 Simulation::Simulation(uint32_t _screenWidth,
@@ -11,15 +9,17 @@ Simulation::Simulation(uint32_t _screenWidth,
 	: screenWidth(_screenWidth)
 	, screenHeight(_screenHeight)
 {
-	srand(time(0));
+	srand((unsigned int)time(0));
 	world = new World(_columns, _rows, _screenWidth, _borderWidth, _tileSize);
 }
 
 Simulation::~Simulation()
 {
+	delete world;
+	world = nullptr;
 }
 
-bool Simulation::update(float deltaTime)
+bool Simulation::update()
 {
 	world->act();
 	return true;

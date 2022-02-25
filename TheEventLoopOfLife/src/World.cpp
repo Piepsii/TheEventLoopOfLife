@@ -19,7 +19,7 @@ World::World(uint32_t _columns,
 			floor(i / _rows));
 		grass->create();
 		if (rand() % 100 < grassSpawnChance) {
-			grass->setState(GrassState::Seed);
+			grass->setState(GrassState::SEED);
 			grass->setHealth(float(rand() / (RAND_MAX + 1.)));
 		}
 		if (i < grid->Columns()
@@ -241,7 +241,7 @@ void World::plantGrass(int _chance)
 {
 	int randomGrassIndex = rand() % grassArray.size();
 	if (rand() % 100 < _chance) {
-		grassArray[randomGrassIndex]->setState(GrassState::Seed);
+		grassArray[randomGrassIndex]->setState(GrassState::SEED);
 		grassArray[randomGrassIndex]->setHealth(0.0f);
 	}
 }
